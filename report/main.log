@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.12) (preloaded format=xelatex 2026.5.23)  25 MAY 2026 18:08
+This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.12) (preloaded format=xelatex 2026.5.23)  25 MAY 2026 18:21
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -325,12 +325,22 @@ Package: longtable 2025-10-13 v4.24 Multi-page Table package (DPC)
 \c@LT@chunks=\count318
 \LT@p@ftn=\toks25
 )
+(C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/tools\tabularx.sty
+Package: tabularx 2023/12/11 v2.12a `tabularx' package (DPC)
+\TX@col@width=\dimen185
+\TX@old@table=\dimen186
+\TX@old@col=\dimen187
+\TX@target=\dimen188
+\TX@delta=\dimen189
+\TX@cols=\count319
+\TX@ftn=\toks26
+)
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/multirow\multirow.sty
 Package: multirow 2024/11/12 v2.9 Span multiple rows of a table
 \multirow@colwidth=\skip60
-\multirow@cntb=\count319
+\multirow@cntb=\count320
 \multirow@dima=\skip61
-\bigstrutjot=\dimen185
+\bigstrutjot=\dimen190
 )
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
 Package: graphicx 2024/12/31 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
@@ -350,8 +360,8 @@ Package graphics Info: Driver file: xetex.def on input line 106.
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\xetex.def
 File: xetex.def 2025/11/01 v5.0p Graphics/color driver for xetex
 ))
-\Gin@req@height=\dimen186
-\Gin@req@width=\dimen187
+\Gin@req@height=\dimen191
+\Gin@req@width=\dimen192
 ) (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
 Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
 
@@ -378,9 +388,9 @@ sty
 y
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfutil
 -common.tex
-\pgfutil@everybye=\toks26
-\pgfutil@tempdima=\dimen188
-\pgfutil@tempdimb=\dimen189
+\pgfutil@everybye=\toks27
+\pgfutil@tempdima=\dimen193
+\pgfutil@tempdimb=\dimen194
 )
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfutil
 -latex.def
@@ -403,33 +413,33 @@ Package: pgfsys 2025-08-29 v3.1.11a (3.1.11a)
 
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkeys
 .code.tex
-\pgfkeys@pathtoks=\toks27
-\pgfkeys@temptoks=\toks28
+\pgfkeys@pathtoks=\toks28
+\pgfkeys@temptoks=\toks29
 
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkeys
 libraryfiltered.code.tex
-\pgfkeys@tmptoks=\toks29
+\pgfkeys@tmptoks=\toks30
 ))
-\pgf@x=\dimen190
-\pgf@y=\dimen191
-\pgf@xa=\dimen192
-\pgf@ya=\dimen193
-\pgf@xb=\dimen194
-\pgf@yb=\dimen195
-\pgf@xc=\dimen196
-\pgf@yc=\dimen197
-\pgf@xd=\dimen198
-\pgf@yd=\dimen199
+\pgf@x=\dimen195
+\pgf@y=\dimen196
+\pgf@xa=\dimen197
+\pgf@ya=\dimen198
+\pgf@xb=\dimen199
+\pgf@yb=\dimen256
+\pgf@xc=\dimen257
+\pgf@yc=\dimen258
+\pgf@xd=\dimen259
+\pgf@yd=\dimen260
 \w@pgf@writea=\write3
 \r@pgf@reada=\read2
-\c@pgf@counta=\count320
-\c@pgf@countb=\count321
-\c@pgf@countc=\count322
-\c@pgf@countd=\count323
-\t@pgf@toka=\toks30
-\t@pgf@tokb=\toks31
-\t@pgf@tokc=\toks32
-\pgf@sys@id@count=\count324
+\c@pgf@counta=\count321
+\c@pgf@countb=\count322
+\c@pgf@countc=\count323
+\c@pgf@countd=\count324
+\t@pgf@toka=\toks31
+\t@pgf@tokb=\toks32
+\t@pgf@tokc=\toks33
+\pgf@sys@id@count=\count325
 
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgf.c
 fg
@@ -449,13 +459,13 @@ File: pgfsys-dvipdfmx.def 2025-08-29 v3.1.11a (3.1.11a)
 s-common-pdf.def
 File: pgfsys-common-pdf.def 2025-08-29 v3.1.11a (3.1.11a)
 )
-\pgfsys@objnum=\count325
+\pgfsys@objnum=\count326
 )))
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
 ssoftpath.code.tex
 File: pgfsyssoftpath.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgfsyssoftpath@smallbuffer@items=\count326
-\pgfsyssoftpath@bigbuffer@items=\count327
+\pgfsyssoftpath@smallbuffer@items=\count327
+\pgfsyssoftpath@bigbuffer@items=\count328
 )
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
 sprotocol.code.tex
@@ -471,12 +481,12 @@ Package: pgfcore 2025-08-29 v3.1.11a (3.1.11a)
 code.tex)
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathparse
 r.code.tex
-\pgfmath@dimen=\dimen256
-\pgfmath@count=\count328
+\pgfmath@dimen=\dimen261
+\pgfmath@count=\count329
 \pgfmath@box=\box63
-\pgfmath@toks=\toks33
-\pgfmath@stack@operand=\toks34
-\pgfmath@stack@operation=\toks35
+\pgfmath@toks=\toks34
+\pgfmath@stack@operand=\toks35
+\pgfmath@stack@operation=\toks36
 )
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
 ions.code.tex)
@@ -500,39 +510,39 @@ ions.integerarithmetics.code.tex)
 code.tex)
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfloat
 .code.tex
-\c@pgfmathroundto@lastzeros=\count329
+\c@pgfmathroundto@lastzeros=\count330
 ))
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfint.code.
 tex)
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
 epoints.code.tex
 File: pgfcorepoints.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@picminx=\dimen257
-\pgf@picmaxx=\dimen258
-\pgf@picminy=\dimen259
-\pgf@picmaxy=\dimen260
-\pgf@pathminx=\dimen261
-\pgf@pathmaxx=\dimen262
-\pgf@pathminy=\dimen263
-\pgf@pathmaxy=\dimen264
-\pgf@xx=\dimen265
-\pgf@xy=\dimen266
-\pgf@yx=\dimen267
-\pgf@yy=\dimen268
-\pgf@zx=\dimen269
-\pgf@zy=\dimen270
+\pgf@picminx=\dimen262
+\pgf@picmaxx=\dimen263
+\pgf@picminy=\dimen264
+\pgf@picmaxy=\dimen265
+\pgf@pathminx=\dimen266
+\pgf@pathmaxx=\dimen267
+\pgf@pathminy=\dimen268
+\pgf@pathmaxy=\dimen269
+\pgf@xx=\dimen270
+\pgf@xy=\dimen271
+\pgf@yx=\dimen272
+\pgf@yy=\dimen273
+\pgf@zx=\dimen274
+\pgf@zy=\dimen275
 )
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
 epathconstruct.code.tex
 File: pgfcorepathconstruct.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@path@lastx=\dimen271
-\pgf@path@lasty=\dimen272
+\pgf@path@lastx=\dimen276
+\pgf@path@lasty=\dimen277
 )
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
 epathusage.code.tex
 File: pgfcorepathusage.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@shorten@end@additional=\dimen273
-\pgf@shorten@start@additional=\dimen274
+\pgf@shorten@end@additional=\dimen278
+\pgf@shorten@start@additional=\dimen279
 )
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
 escopes.code.tex
@@ -540,19 +550,19 @@ File: pgfcorescopes.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 \pgfpic=\box64
 \pgf@hbox=\box65
 \pgf@layerbox@main=\box66
-\pgf@picture@serial@count=\count330
+\pgf@picture@serial@count=\count331
 )
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
 egraphicstate.code.tex
 File: pgfcoregraphicstate.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgflinewidth=\dimen275
+\pgflinewidth=\dimen280
 )
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
 etransformations.code.tex
 File: pgfcoretransformations.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@pt@x=\dimen276
-\pgf@pt@y=\dimen277
-\pgf@pt@temp=\dimen278
+\pgf@pt@x=\dimen281
+\pgf@pt@y=\dimen282
+\pgf@pt@temp=\dimen283
 )
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
 equick.code.tex
@@ -569,14 +579,14 @@ File: pgfcorepathprocessing.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
 earrows.code.tex
 File: pgfcorearrows.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgfarrowsep=\dimen279
+\pgfarrowsep=\dimen284
 )
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
 eshade.code.tex
 File: pgfcoreshade.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@max=\dimen280
-\pgf@sys@shading@range@num=\count331
-\pgf@shadingcount=\count332
+\pgf@max=\dimen285
+\pgf@sys@shading@range@num=\count332
+\pgf@shadingcount=\count333
 )
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
 eimage.code.tex
@@ -615,8 +625,8 @@ File: pgfmoduleplot.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\pgfco
 mp-version-0-65.sty
 Package: pgfcomp-version-0-65 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@nodesepstart=\dimen281
-\pgf@nodesepend=\dimen282
+\pgf@nodesepstart=\dimen286
+\pgf@nodesepend=\dimen287
 )
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\pgfco
 mp-version-1-18.sty
@@ -634,10 +644,10 @@ ty
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgffor.
 code.tex
 Package: pgffor 2025-08-29 v3.1.11a (3.1.11a)
-\pgffor@iter=\dimen283
-\pgffor@skip=\dimen284
-\pgffor@stack=\toks36
-\pgffor@toks=\toks37
+\pgffor@iter=\dimen288
+\pgffor@skip=\dimen289
+\pgffor@stack=\toks37
+\pgffor@toks=\toks38
 ))
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tik
 z\tikz.code.tex
@@ -646,34 +656,34 @@ Package: tikz 2025-08-29 v3.1.11a (3.1.11a)
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries\pgflibr
 aryplothandlers.code.tex
 File: pgflibraryplothandlers.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgf@plot@mark@count=\count333
-\pgfplotmarksize=\dimen285
+\pgf@plot@mark@count=\count334
+\pgfplotmarksize=\dimen290
 )
-\tikz@lastx=\dimen286
-\tikz@lasty=\dimen287
-\tikz@lastxsaved=\dimen288
-\tikz@lastysaved=\dimen289
-\tikz@lastmovetox=\dimen290
-\tikz@lastmovetoy=\dimen291
-\tikzleveldistance=\dimen292
-\tikzsiblingdistance=\dimen293
+\tikz@lastx=\dimen291
+\tikz@lasty=\dimen292
+\tikz@lastxsaved=\dimen293
+\tikz@lastysaved=\dimen294
+\tikz@lastmovetox=\dimen295
+\tikz@lastmovetoy=\dimen296
+\tikzleveldistance=\dimen297
+\tikzsiblingdistance=\dimen298
 \tikz@figbox=\box69
 \tikz@figbox@bg=\box70
 \tikz@tempbox=\box71
 \tikz@tempbox@bg=\box72
-\tikztreelevel=\count334
-\tikznumberofchildren=\count335
-\tikznumberofcurrentchild=\count336
-\tikz@fig@count=\count337
+\tikztreelevel=\count335
+\tikznumberofchildren=\count336
+\tikznumberofcurrentchild=\count337
+\tikz@fig@count=\count338
 
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodule
 matrix.code.tex
 File: pgfmodulematrix.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgfmatrixcurrentrow=\count338
-\pgfmatrixcurrentcolumn=\count339
-\pgf@matrix@numberofcolumns=\count340
+\pgfmatrixcurrentrow=\count339
+\pgfmatrixcurrentcolumn=\count340
+\pgf@matrix@numberofcolumns=\count341
 )
-\tikz@expandcount=\count341
+\tikz@expandcount=\count342
 
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tik
 z/libraries\tikzlibrarytopaths.code.tex
@@ -682,10 +692,10 @@ File: tikzlibrarytopaths.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries\pgflibr
 aryarrows.meta.code.tex
 File: pgflibraryarrows.meta.code.tex 2025-08-29 v3.1.11a (3.1.11a)
-\pgfarrowinset=\dimen294
-\pgfarrowlength=\dimen295
-\pgfarrowwidth=\dimen296
-\pgfarrowlinewidth=\dimen297
+\pgfarrowinset=\dimen299
+\pgfarrowlength=\dimen300
+\pgfarrowwidth=\dimen301
+\pgfarrowlinewidth=\dimen302
 )
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tik
 z/libraries\tikzlibrarypositioning.code.tex
@@ -700,26 +710,26 @@ pgflibraryshapes.geometric.code.tex
 File: pgflibraryshapes.geometric.code.tex 2025-08-29 v3.1.11a (3.1.11a)
 ))
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.sty
-\lst@mode=\count342
+\lst@mode=\count343
 \lst@gtempboxa=\box73
-\lst@token=\toks38
-\lst@length=\count343
-\lst@currlwidth=\dimen298
-\lst@column=\count344
-\lst@pos=\count345
-\lst@lostspace=\dimen299
-\lst@width=\dimen300
-\lst@newlines=\count346
-\lst@lineno=\count347
-\lst@maxwidth=\dimen301
+\lst@token=\toks39
+\lst@length=\count344
+\lst@currlwidth=\dimen303
+\lst@column=\count345
+\lst@pos=\count346
+\lst@lostspace=\dimen304
+\lst@width=\dimen305
+\lst@newlines=\count347
+\lst@lineno=\count348
+\lst@maxwidth=\dimen306
 
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstpatch.sty
 File: lstpatch.sty 2025/11/14 1.11b (Carsten Heinz)
 )
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstmisc.sty
 File: lstmisc.sty 2025/11/14 1.11b (Carsten Heinz)
-\c@lstnumber=\count348
-\lst@skipnumbers=\count349
+\c@lstnumber=\count349
+\lst@skipnumbers=\count350
 \lst@framebox=\box74
 )
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.cfg
@@ -737,18 +747,18 @@ Package: caption 2023/08/05 v3.6o Customizing captions (AR)
 
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption3.sty
 Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
-\caption@tempdima=\dimen302
-\captionmargin=\dimen303
-\caption@leftmargin=\dimen304
-\caption@rightmargin=\dimen305
-\caption@width=\dimen306
-\caption@indent=\dimen307
-\caption@parindent=\dimen308
-\caption@hangindent=\dimen309
+\caption@tempdima=\dimen307
+\captionmargin=\dimen308
+\caption@leftmargin=\dimen309
+\caption@rightmargin=\dimen310
+\caption@width=\dimen311
+\caption@indent=\dimen312
+\caption@parindent=\dimen313
+\caption@hangindent=\dimen314
 Package caption Info: Standard document class detected.
 )
-\c@caption@flags=\count350
-\c@continuedfloat=\count351
+\c@caption@flags=\count351
+\c@continuedfloat=\count352
 Package caption Info: listings package is loaded.
 Package caption Info: longtable package is loaded.
 
@@ -758,23 +768,23 @@ Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
 ty
 Package: subcaption 2023/07/28 v1.6b Sub-captions (AR)
 Package caption Info: New subtype `subfigure' on input line 238.
-\c@subfigure=\count352
+\c@subfigure=\count353
 Package caption Info: New subtype `subtable' on input line 238.
-\c@subtable=\count353
+\c@subtable=\count354
 ) (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/enumitem\enumitem.sty
 Package: enumitem 2025/02/06 v3.11 Customized lists
 \labelindent=\skip62
-\enit@outerparindent=\dimen310
-\enit@toks=\toks39
+\enit@outerparindent=\dimen315
+\enit@toks=\toks40
 \enit@inbox=\box75
-\enit@count@id=\count354
-\enitdp@description=\count355
+\enit@count@id=\count355
+\enitdp@description=\count356
 ) (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count356
-\float@exts=\toks40
+\c@float@type=\count357
+\float@exts=\toks41
 \float@box=\box76
-\@float@everytoks=\toks41
+\@float@everytoks=\toks42
 \@floatcapt=\box77
 )
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
@@ -823,22 +833,22 @@ Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.sty
 Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
 ))
-\c@section@level=\count357
+\c@section@level=\count358
 )
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.s
 ty
 Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
 )
 )
-\@linkdim=\dimen311
-\Hy@linkcounter=\count358
-\Hy@pagecounter=\count359
+\@linkdim=\dimen316
+\Hy@linkcounter=\count359
+\Hy@pagecounter=\count360
  (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def
 File: pd1enc.def 2025-07-12 v7.01o Hyperref: PDFDocEncoding definition (HO)
 ) (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
-\Hy@SavedSpaceFactor=\count360
+\Hy@SavedSpaceFactor=\count361
  (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def
 File: puenc.def 2025-07-12 v7.01o Hyperref: PDF Unicode definition (HO)
 )
@@ -849,14 +859,14 @@ Package hyperref Info: Plain pages OFF on input line 4210.
 Package hyperref Info: Backreferencing OFF on input line 4215.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4462.
-\c@Hy@tempcnt=\count361
+\c@Hy@tempcnt=\count362
 
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty
 \Urlmuskip=\muskip18
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 4801.
-\XeTeXLinkMargin=\dimen312
+\XeTeXLinkMargin=\dimen317
 
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
@@ -866,9 +876,9 @@ Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
-\Fld@menulength=\count362
-\Field@Width=\dimen313
-\Fld@charsize=\dimen314
+\Fld@menulength=\count363
+\Field@Width=\dimen318
+\Fld@charsize=\dimen319
 Package hyperref Info: Hyper figures OFF on input line 6078.
 Package hyperref Info: Link nesting OFF on input line 6083.
 Package hyperref Info: Hyper index ON on input line 6086.
@@ -876,19 +886,19 @@ Package hyperref Info: backreferencing OFF on input line 6093.
 Package hyperref Info: Link coloring OFF on input line 6098.
 Package hyperref Info: Link coloring with OCG OFF on input line 6103.
 Package hyperref Info: PDF/A mode OFF on input line 6108.
-\Hy@abspage=\count363
-\c@Item=\count364
-\c@Hfootnote=\count365
+\Hy@abspage=\count364
+\c@Item=\count365
+\c@Hfootnote=\count366
 )
 Package hyperref Info: Driver (autodetected): hxetex.
 
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hxetex.def
 File: hxetex.def 2025-07-12 v7.01o Hyperref driver for XeTeX
 \pdfm@box=\box78
-\c@Hy@AnnotLevel=\count366
-\HyField@AnnotCount=\count367
-\Fld@listcount=\count368
-\c@bookmark@seq@number=\count369
+\c@Hy@AnnotLevel=\count367
+\HyField@AnnotCount=\count368
+\Fld@listcount=\count369
+\c@bookmark@seq@number=\count370
 
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfil
 echeck.sty
@@ -920,7 +930,7 @@ Package: fancyhdr 2025/02/07 v5.2 Extensive control of page headers and footers
 \f@nch@widthL=\skip75
 \f@nch@widthC=\skip76
 \f@nch@widthR=\skip77
-\@temptokenb=\toks42
+\@temptokenb=\toks43
 )
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/lastpage\lastpage.sty
 Package: lastpage 2025/08/14 v2.1h lastpage: 2.09 or 2e? (HMM)
@@ -932,7 +942,7 @@ MM)
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/lastpage\lastpagemodern
 .sty
 Package: lastpagemodern 2025-08-14 v2.1h Refers to last page's name (HMM; JPG)
-\c@lastpagecount=\count370
+\c@lastpagecount=\count371
 ) 
 ))
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
@@ -941,26 +951,26 @@ File: lstlang1.sty 2025/11/14 1.11b listings language file
 (main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 118.
-LaTeX Font Info:    ... okay on input line 118.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 118.
-LaTeX Font Info:    ... okay on input line 118.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 118.
-LaTeX Font Info:    ... okay on input line 118.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 118.
-LaTeX Font Info:    ... okay on input line 118.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 118.
-LaTeX Font Info:    ... okay on input line 118.
-LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 118.
-LaTeX Font Info:    ... okay on input line 118.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 118.
-LaTeX Font Info:    ... okay on input line 118.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 118.
-LaTeX Font Info:    ... okay on input line 118.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 118.
-LaTeX Font Info:    ... okay on input line 118.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 118.
-LaTeX Font Info:    ... okay on input line 118.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 128.
+LaTeX Font Info:    ... okay on input line 128.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: xetex
@@ -1003,70 +1013,70 @@ Package fontspec Info:
 
 \symlegacymaths=\mathgroup6
 LaTeX Font Info:    Overwriting symbol font `legacymaths' in version `bold'
-(Font)                  OT1/cmr/m/n --> OT1/cmr/bx/n on input line 118.
-LaTeX Font Info:    Redeclaring math accent \acute on input line 118.
-LaTeX Font Info:    Redeclaring math accent \grave on input line 118.
-LaTeX Font Info:    Redeclaring math accent \ddot on input line 118.
-LaTeX Font Info:    Redeclaring math accent \tilde on input line 118.
-LaTeX Font Info:    Redeclaring math accent \bar on input line 118.
-LaTeX Font Info:    Redeclaring math accent \breve on input line 118.
-LaTeX Font Info:    Redeclaring math accent \check on input line 118.
-LaTeX Font Info:    Redeclaring math accent \hat on input line 118.
-LaTeX Font Info:    Redeclaring math accent \dot on input line 118.
-LaTeX Font Info:    Redeclaring math accent \mathring on input line 118.
-LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 118.
-LaTeX Font Info:    Redeclaring math symbol \Delta on input line 118.
-LaTeX Font Info:    Redeclaring math symbol \Theta on input line 118.
-LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 118.
-LaTeX Font Info:    Redeclaring math symbol \Xi on input line 118.
-LaTeX Font Info:    Redeclaring math symbol \Pi on input line 118.
-LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 118.
-LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 118.
-LaTeX Font Info:    Redeclaring math symbol \Phi on input line 118.
-LaTeX Font Info:    Redeclaring math symbol \Psi on input line 118.
-LaTeX Font Info:    Redeclaring math symbol \Omega on input line 118.
-LaTeX Font Info:    Redeclaring math symbol \mathdollar on input line 118.
-LaTeX Font Info:    Redeclaring symbol font `operators' on input line 118.
+(Font)                  OT1/cmr/m/n --> OT1/cmr/bx/n on input line 128.
+LaTeX Font Info:    Redeclaring math accent \acute on input line 128.
+LaTeX Font Info:    Redeclaring math accent \grave on input line 128.
+LaTeX Font Info:    Redeclaring math accent \ddot on input line 128.
+LaTeX Font Info:    Redeclaring math accent \tilde on input line 128.
+LaTeX Font Info:    Redeclaring math accent \bar on input line 128.
+LaTeX Font Info:    Redeclaring math accent \breve on input line 128.
+LaTeX Font Info:    Redeclaring math accent \check on input line 128.
+LaTeX Font Info:    Redeclaring math accent \hat on input line 128.
+LaTeX Font Info:    Redeclaring math accent \dot on input line 128.
+LaTeX Font Info:    Redeclaring math accent \mathring on input line 128.
+LaTeX Font Info:    Redeclaring math symbol \Gamma on input line 128.
+LaTeX Font Info:    Redeclaring math symbol \Delta on input line 128.
+LaTeX Font Info:    Redeclaring math symbol \Theta on input line 128.
+LaTeX Font Info:    Redeclaring math symbol \Lambda on input line 128.
+LaTeX Font Info:    Redeclaring math symbol \Xi on input line 128.
+LaTeX Font Info:    Redeclaring math symbol \Pi on input line 128.
+LaTeX Font Info:    Redeclaring math symbol \Sigma on input line 128.
+LaTeX Font Info:    Redeclaring math symbol \Upsilon on input line 128.
+LaTeX Font Info:    Redeclaring math symbol \Phi on input line 128.
+LaTeX Font Info:    Redeclaring math symbol \Psi on input line 128.
+LaTeX Font Info:    Redeclaring math symbol \Omega on input line 128.
+LaTeX Font Info:    Redeclaring math symbol \mathdollar on input line 128.
+LaTeX Font Info:    Redeclaring symbol font `operators' on input line 128.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `normal' on input line 118.
+(Font)              `operators' in the math version `normal' on input line 128.
 
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  OT1/cmr/m/n --> TU/TimesNewRoman(0)/m/n on input line 1
-18.
+28.
 LaTeX Font Info:    Encoding `OT1' has changed to `TU' for symbol font
-(Font)              `operators' in the math version `bold' on input line 118.
+(Font)              `operators' in the math version `bold' on input line 128.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  OT1/cmr/bx/n --> TU/TimesNewRoman(0)/m/n on input line 
-118.
+128.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
 (Font)                  TU/TimesNewRoman(0)/m/n --> TU/TimesNewRoman(0)/m/n on 
-input line 118.
+input line 128.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `normal'
 (Font)                  OT1/cmr/m/it --> TU/TimesNewRoman(0)/m/it on input line
- 118.
+ 128.
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
 (Font)                  OT1/cmr/bx/n --> TU/TimesNewRoman(0)/b/n on input line 
-118.
+128.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `normal'
-(Font)                  OT1/cmss/m/n --> TU/Arial(0)/m/n on input line 118.
+(Font)                  OT1/cmss/m/n --> TU/Arial(0)/m/n on input line 128.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `normal'
-(Font)                  OT1/cmtt/m/n --> TU/Consolas(0)/m/n on input line 118.
+(Font)                  OT1/cmtt/m/n --> TU/Consolas(0)/m/n on input line 128.
 LaTeX Font Info:    Overwriting symbol font `operators' in version `bold'
 (Font)                  TU/TimesNewRoman(0)/m/n --> TU/TimesNewRoman(0)/b/n on 
-input line 118.
+input line 128.
 LaTeX Font Info:    Overwriting math alphabet `\mathit' in version `bold'
 (Font)                  OT1/cmr/bx/it --> TU/TimesNewRoman(0)/b/it on input lin
-e 118.
+e 128.
 LaTeX Font Info:    Overwriting math alphabet `\mathsf' in version `bold'
-(Font)                  OT1/cmss/bx/n --> TU/Arial(0)/b/n on input line 118.
+(Font)                  OT1/cmss/bx/n --> TU/Arial(0)/b/n on input line 128.
 LaTeX Font Info:    Overwriting math alphabet `\mathtt' in version `bold'
-(Font)                  OT1/cmtt/m/n --> TU/Consolas(0)/b/n on input line 118.
-\c@lstlisting=\count371
+(Font)                  OT1/cmtt/m/n --> TU/Consolas(0)/b/n on input line 128.
+\c@lstlisting=\count372
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
 Package caption Info: hyperref package is loaded.
 Package caption Info: End \AtBeginDocument code.
-Package hyperref Info: Link coloring OFF on input line 118.
+Package hyperref Info: Link coloring OFF on input line 128.
 (main.out) (main.out)
 \@outlinefile=\write4
 \openout4 = `main.out'.
@@ -1099,69 +1109,24 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 \openout7 = `main.lof'.
 
  [4] (sections/01_overview.tex
-Overfull \hbox (8.15538pt too wide) in paragraph at lines 48--60
- [][] 
+Overfull \hbox (20.44339pt too wide) in paragraph at lines 7--8
+[]\TU/TimesNewRoman(0)/m/n/12 Các chương trình được hiện thực bằng Python theo 
+giao diện chung \TU/Consolas(0)/m/n/12 MAIN(input_file_path)\TU/TimesNewRoman(0
+)/m/n/12 .
  []
 
-) (sections/challenge1.tex [5]
-Overfull \hbox (23.62698pt too wide) in paragraph at lines 9--10
-\TU/TimesNewRoman(0)/m/n/12 File $[][][][][][][][][] [] [][][][][][][][][][] []
- [][]$ đọc toàn bộ input ở dạng byte vào biến toàn cục \TU/Consolas(0)/m/n/12 _
-global_data\TU/TimesNewRoman(0)/m/n/12 .
+[5]
+Underfull \hbox (badness 1975) in paragraph at lines 68--68
+[]|\TU/TimesNewRoman(0)/m/n/12 Chia dữ liệu đầu vào theo byte-range, mỗi
  []
 
-[6]
+) (sections/challenge1.tex [6]
 Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
-nput line 20.
-
-Overfull \hbox (172.03723pt too wide) in paragraph at lines 48--48
- [][] 
- []
-
-) (sections/challenge2.tex [7]
-Overfull \hbox (0.55191pt too wide) in paragraph at lines 42--43
-[]\TU/TimesNewRoman(0)/b/n/12 Phân phối dữ liệu\TU/TimesNewRoman(0)/m/n/12 : in
-put byte và bảng Fibonacci là dữ liệu đọc chung; output là \TU/Consolas(0)/m/n/
-12 RawArray
- []
-
-[8]
-Overfull \hbox (172.03723pt too wide) in paragraph at lines 49--49
- [][] 
- []
-
-) (sections/challenge3.tex [9]
-Overfull \hbox (103.3888pt too wide) in paragraph at lines 55--66
- [][] 
- []
-
-[10]) (sections/challenge4.tex [11]
-Overfull \hbox (95.88873pt too wide) in paragraph at lines 51--60
- [][] 
- []
-
-) (sections/challenge5.tex
-Overfull \hbox (0.83203pt too wide) in paragraph at lines 63--1
- []\TU/TimesNewRoman(0)/b/n/12 Nhận xét.[] [][CẦN ĐIỀN: Nêu rõ ngưỡng N nhỏ có 
-thể chạy tuần tự nhanh hơn do overhead;
- []
-
-[12] [13]
-Overfull \hbox (172.03723pt too wide) in paragraph at lines 42--42
- [][] 
- []
-
-) (sections/challenge6.tex [14]
-Overfull \hbox (172.03723pt too wide) in paragraph at lines 51--51
- [][] 
- []
-
-) (sections/08_conclusion.tex [15]
-Overfull \hbox (183.0039pt too wide) in paragraph at lines 16--28
- [][] 
- []
-
-) (sections/09_appendix.tex [16]
+nput line 19.
+ [7]) (sections/challenge2.tex [8] [9] [10])
+(sections/challenge3.tex [11] [12]) (sections/challenge4.tex [13] [14] [15])
+(sections/challenge5.tex [16] [17]) (sections/challenge6.tex [18] [19] [20])
+(sections/08_conclusion.tex [21]) (sections/09_appendix.tex
 Overfull \hbox (80.9678pt too wide) in paragraph at lines 29--41
  [][] 
  []
@@ -1206,24 +1171,27 @@ Overfull \hbox (80.6261pt too wide) in alignment at lines 55--67
  [] [] [] 
  []
 
-ignored error: Infinite glue shrinkage found in box being split [17]) [18]
-
+[22]) [23] 
 enddocument/afterlastpage (AED): lastpage setting LastPage.
 (main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-24>
  ***********
+
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: F688804863C423A4639131DF75AB47A9;10411.
+(rerunfilecheck)             Checksum: 986DB58C401A9127F35FCE541C8A175D;11345.
  ) 
 Here is how much of TeX's memory you used:
- 28365 strings out of 402987
- 565549 string characters out of 5448524
- 1306095 words of memory out of 5000000
- 56596 multiletter control sequences out of 15000+600000
- 633118 words of font info for 108 fonts, out of 8000000 for 9000
+ 28700 strings out of 402987
+ 571775 string characters out of 5448524
+ 1287505 words of memory out of 5000000
+ 56927 multiletter control sequences out of 15000+600000
+ 633126 words of font info for 109 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
- 84i,12n,94p,611b,1842s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 84i,12n,94p,516b,1842s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (19 pages).
+Output written on main.pdf (24 pages).

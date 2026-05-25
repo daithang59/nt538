@@ -2,50 +2,68 @@
 \label{sec:challenge1}
 
 \begin{requirementbox}{Yêu cầu bài toán}
-Đọc $N$ số thực và chỉ cộng các giá trị đồng thời thỏa ba điều kiện: là số nguyên về mặt toán học, lớn hơn 0, và chia hết cho 3. Kết quả trả về là một số nguyên có thể vượt 32-bit.
+Cho dãy $A$ gồm $N$ giá trị thực. Chương trình cần tính tổng các phần tử đồng thời thỏa ba điều kiện: có giá trị toán học là số nguyên, lớn hơn 0 và chia hết cho 3. Kết quả trả về là một số nguyên, trong đó miền giá trị có thể vượt giới hạn 32-bit.
 \end{requirementbox}
 
-\subsection{Cách hiện thực trong mã nguồn}
-File \codepath{challenge/challenge1.py} đọc toàn bộ input ở dạng byte vào biến toàn cục \func{\_global\_data}. Sau khi bỏ dòng đầu chứa $N$, chương trình chia vùng dữ liệu còn lại thành nhiều đoạn byte. Mỗi worker gọi \func{\_process\_indices(start, end)} để split token trong đoạn của mình, ép kiểu \func{float}, kiểm tra \func{val.is\_integer()}, điều kiện dương và chia hết cho 3, rồi trả về tổng cục bộ. Tiến trình chính cộng các tổng cục bộ bằng \func{sum(parts)}.
+\subsection{Hiện thực đã xây dựng}
+Trong \codepath{challenge/challenge1.py}, dữ liệu đầu vào được đọc ở dạng byte nhằm giảm chi phí chuyển đổi chuỗi không cần thiết. Sau khi xác định vị trí kết thúc dòng đầu tiên chứa $N$, phần dữ liệu còn lại được chia thành nhiều đoạn liên tiếp theo byte. Mỗi đoạn được giao cho một worker để xử lý độc lập thông qua hàm \func{\_process\_indices}.
+
+Tại mỗi worker, các token trong đoạn được tách bằng khoảng trắng, chuyển sang kiểu số thực và kiểm tra lần lượt các điều kiện của đề bài. Worker chỉ trả về tổng cục bộ của đoạn mà nó phụ trách. Tiến trình chính thực hiện bước gom kết quả bằng cách cộng các tổng cục bộ này.
 
 \subsection{Phân tích song song hóa}
-Phép kiểm tra từng phần tử độc lập với mọi phần tử khác, vì vậy bài toán phù hợp với mô hình map-reduce:
-\begin{itemize}
-  \item \textbf{Map}: mỗi worker xử lý một đoạn token và tính tổng cục bộ.
-  \item \textbf{Reduce}: tiến trình chính cộng các tổng cục bộ.
-\end{itemize}
-Dữ liệu được chia theo byte-range thay vì theo số lượng token để tránh phải parse trước toàn bộ mảng. Để không cắt giữa một token, điểm cuối mỗi chunk được dịch tới khoảng trắng tiếp theo. Cách chia này giảm chi phí tiền xử lý nhưng có thể gây lệch tải nhẹ nếu các token có độ dài rất khác nhau.
+Bài toán có tính độc lập dữ liệu rất cao. Việc kiểm tra một phần tử không phụ thuộc vào giá trị hoặc trạng thái của các phần tử khác. Do đó, mô hình song song phù hợp là \textit{map-reduce}: giai đoạn map lọc và cộng cục bộ trên từng đoạn dữ liệu, còn giai đoạn reduce cộng các tổng cục bộ thành kết quả cuối cùng.
+
+Cách chia theo byte-range giúp tránh phải parse trước toàn bộ dãy số. Tuy nhiên, để bảo đảm một token không bị cắt đôi giữa hai worker, điểm kết thúc của mỗi đoạn được dịch đến khoảng trắng gần nhất. Thiết kế này giảm chi phí tiền xử lý, đồng thời vẫn giữ được tính đúng đắn của quá trình tách token.
 
 \subsection{Thiết kế thuật toán song song}
 \begin{lstlisting}[caption={Pseudocode song song cho Challenge 1}]
 MAIN(path):
     raw = read_all_bytes(path)
-    data_start = position_after_first_line(raw)
-    workers = choose_worker_count(len(raw) - data_start)
-    ranges = split_byte_ranges_at_token_boundary(raw, data_start, workers)
+    data_start = locate_first_data_byte(raw)
+    ranges = split_byte_ranges_at_token_boundary(raw, data_start)
 
     partial_sums = pool.starmap(process_range, ranges)
     return sum(partial_sums)
 
 process_range(start, end):
-    total = 0
+    local_sum = 0
     for token in raw[start:end].split():
         value = float(token)
         if value > 0 and value.is_integer() and int(value) % 3 == 0:
-            total += int(value)
-    return total
+            local_sum += int(value)
+    return local_sum
 \end{lstlisting}
+
+\subsection{Lưu đồ thuật toán}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=0.8cm and 1.1cm, scale=0.9, transform shape]
+\node[flowstart] (start) {Bắt đầu};
+\node[flowprocess, below=of start] (read) {Đọc toàn bộ input ở dạng byte};
+\node[flowprocess, below=of read] (split) {Bỏ dòng $N$ và chia dữ liệu thành các byte-range};
+\node[flowprocess, below=of split] (map) {Worker tách token, kiểm tra điều kiện và tính tổng cục bộ};
+\node[flowmerge, below=of map] (reduce) {Tiến trình chính cộng các tổng cục bộ};
+\node[flowstart, below=of reduce] (end) {Trả về tổng};
+\draw[flowarrow] (start) -- (read);
+\draw[flowarrow] (read) -- (split);
+\draw[flowarrow] (split) -- (map);
+\draw[flowarrow] (map) -- (reduce);
+\draw[flowarrow] (reduce) -- (end);
+\end{tikzpicture}
+\caption{Luồng xử lý song song của Challenge 1}
+\label{fig:challenge1-flow}
+\end{figure}
 
 \subsection{Dữ liệu, phụ thuộc và chi phí}
 \begin{itemize}
-  \item \textbf{Phân phối dữ liệu}: input được giữ trong biến toàn cục; worker chỉ nhận cặp chỉ số \func{(start, end)}.
-  \item \textbf{Phụ thuộc dữ liệu}: không có phụ thuộc giữa các phần tử; chỉ có bước reduce cuối.
-  \item \textbf{Cân bằng tải}: gần cân bằng theo số byte; có thể kém cân bằng nếu token dài/ngắn không đều.
-  \item \textbf{Chi phí giao tiếp}: thấp vì worker trả về một số nguyên cục bộ; chi phí chính là tạo process, split token và parse float.
+  \item \textbf{Phân phối dữ liệu}: dữ liệu đầu vào được lưu trong biến toàn cục; worker chỉ nhận cặp chỉ số \func{(start, end)}.
+  \item \textbf{Phụ thuộc dữ liệu}: không có phụ thuộc giữa các phần tử; chỉ tồn tại bước reduce cuối cùng.
+  \item \textbf{Cân bằng tải}: chia theo số byte giúp tải tương đối đều, nhưng có thể lệch nhẹ nếu độ dài token khác nhau nhiều.
+  \item \textbf{Chi phí giao tiếp}: thấp, vì mỗi worker chỉ trả về một số nguyên đại diện cho tổng cục bộ.
 \end{itemize}
 
 \subsection{Đánh giá hiệu năng}
 \benchmarktable{Challenge 1}
 
 \paragraph{Nhận xét.}
-\placeholder{So sánh thời gian tuần tự và song song. Giải thích khi input nhỏ có thể chậm hơn do overhead tạo process; input lớn thường có lợi vì parse và kiểm tra token độc lập.}
+\placeholder{So sánh thời gian tuần tự và song song. Cần làm rõ trường hợp input nhỏ có thể không đạt speedup do chi phí tạo tiến trình, trong khi input lớn thường khai thác tốt hơn tính độc lập của từng token.}

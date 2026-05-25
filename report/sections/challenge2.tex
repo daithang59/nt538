@@ -2,51 +2,70 @@
 \label{sec:challenge2}
 
 \begin{requirementbox}{Yêu cầu bài toán}
-Với $N$ truy vấn $A_i$ và modulo cố định $Q$, trả về danh sách $F(A_i) \bmod Q$ theo đúng thứ tự input. Ràng buộc lớn nhất là $N \le 10^6$, $Q \le 10^9$, $A_i \le 2 \times 10^8$.
+Với $N$ truy vấn $A_i$ và một modulo cố định $Q$, chương trình cần trả về danh sách $F(A_i) \bmod Q$ theo đúng thứ tự xuất hiện trong input. Ràng buộc lớn của $N$ và $A_i$ khiến việc tính lặp tuyến tính từng số Fibonacci là không khả thi.
 \end{requirementbox}
 
-\subsection{Cách hiện thực trong mã nguồn}
-File \codepath{challenge/challenge2.py} dùng hai chiến lược:
-\begin{itemize}
-  \item \func{\_fib\_pair}: fast doubling, tính $F(n)$ trong \bigO{\log n}.
-  \item \func{\_build\_tables}: dựng bảng window để tách $n$ thành phần thấp/cao, từ đó tính nhanh $F(n)$ modulo $Q$ bằng công thức cộng Fibonacci.
-\end{itemize}
-Kết quả được ghi vào \func{multiprocessing.RawArray} để bảo toàn thứ tự output và giảm chi phí gom danh sách. Khi số truy vấn đủ lớn, chương trình chia input theo byte-range, mỗi worker xử lý một đoạn truy vấn và ghi vào vùng kết quả tương ứng.
+\subsection{Hiện thực đã xây dựng}
+Trong \codepath{challenge/challenge2.py}, mỗi truy vấn Fibonacci được xử lý độc lập. Chương trình sử dụng hai kỹ thuật chính. Kỹ thuật thứ nhất là fast doubling, cho phép tính $F(n)$ với độ phức tạp \bigO{\log n}. Kỹ thuật thứ hai là bảng window, trong đó chỉ số $n$ được tách thành phần thấp và phần cao để tái sử dụng các giá trị Fibonacci đã tiền xử lý.
+
+Kết quả được ghi vào \func{multiprocessing.RawArray}. Cách tổ chức này giúp các worker ghi trực tiếp vào vùng kết quả đã được định vị bằng offset, từ đó bảo toàn thứ tự output mà không cần truyền một danh sách lớn về tiến trình chính.
 
 \subsection{Phân tích song song hóa}
-Mỗi truy vấn Fibonacci độc lập với các truy vấn khác, nên có thể song song hóa theo tập truy vấn. Điểm cần chú ý là thứ tự output: worker xử lý chunk nào phải ghi kết quả vào đúng offset \func{out\_start}. Bảng window là dữ liệu đọc chung sau khi dựng, phù hợp để chia sẻ qua cơ chế fork trên Linux.
+Các truy vấn $F(A_i) \bmod Q$ không phụ thuộc lẫn nhau, do đó đơn vị song song tự nhiên là từng đoạn truy vấn. Mỗi worker nhận một đoạn byte chứa nhiều truy vấn, tách token, tính kết quả và ghi vào vùng output tương ứng. Trước khi worker bắt đầu, các cấu trúc dùng chung như modulo và bảng window phải được khởi tạo hoàn chỉnh.
+
+Việc chia theo byte-range giúp giảm chi phí tạo danh sách truy vấn trung gian. Để bảo toàn thứ tự, mỗi chunk đi kèm với \func{out\_start}, là vị trí bắt đầu ghi kết quả trong \func{RawArray}.
 
 \subsection{Thiết kế thuật toán song song}
 \begin{lstlisting}[caption={Pseudocode song song cho Challenge 2}]
 MAIN(path):
     raw = read_all_bytes(path)
     N, modulo, query_start = parse_header(raw)
-    if modulo == 1:
-        return [0] * N
+    prepare_fibonacci_tables_if_beneficial()
 
-    build_window_tables_if_beneficial()
-    output = RawArray(unsigned_int_or_long_long, N)
-    chunks = split_queries_by_byte_range(raw, query_start, workers)
+    output = RawArray(size=N)
+    chunks = split_query_region(raw, query_start)
 
     for each chunk in parallel:
-        tokens = raw[chunk.byte_start:chunk.byte_end].split()
-        for local_index, token in enumerate(tokens):
+        tokens = raw[chunk.start:chunk.end].split()
+        for j, token in enumerate(tokens):
             n = int(token)
-            output[chunk.out_start + local_index] = fib_mod(n, modulo)
+            output[chunk.out_start + j] = fib_mod(n, modulo)
 
     return output[:]
 \end{lstlisting}
 
+\subsection{Lưu đồ thuật toán}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=0.8cm and 1.1cm, scale=0.9, transform shape]
+\node[flowstart] (start) {Bắt đầu};
+\node[flowprocess, below=of start] (parse) {Đọc input và phân tích $N$, $Q$};
+\node[flowprocess, below=of parse] (table) {Khởi tạo bảng window hoặc chọn fast doubling};
+\node[flowprocess, below=of table] (chunks) {Chia vùng truy vấn thành các chunk};
+\node[flowprocess, below=of chunks] (workers) {Worker tính $F(A_i) \bmod Q$ cho từng token};
+\node[flowmerge, below=of workers] (write) {Ghi kết quả vào \func{RawArray} theo offset};
+\node[flowstart, below=of write] (end) {Trả về danh sách kết quả};
+\draw[flowarrow] (start) -- (parse);
+\draw[flowarrow] (parse) -- (table);
+\draw[flowarrow] (table) -- (chunks);
+\draw[flowarrow] (chunks) -- (workers);
+\draw[flowarrow] (workers) -- (write);
+\draw[flowarrow] (write) -- (end);
+\end{tikzpicture}
+\caption{Luồng xử lý song song của Challenge 2}
+\label{fig:challenge2-flow}
+\end{figure}
+
 \subsection{Dữ liệu, phụ thuộc và chi phí}
 \begin{itemize}
-  \item \textbf{Phân phối dữ liệu}: input byte và bảng Fibonacci là dữ liệu đọc chung; output là \func{RawArray} ghi theo vùng không giao nhau.
-  \item \textbf{Phụ thuộc dữ liệu}: không có phụ thuộc giữa các truy vấn; phụ thuộc duy nhất là bảng window phải dựng xong trước khi worker chạy.
-  \item \textbf{Cân bằng tải}: chia theo byte và số dòng; nếu các truy vấn có số chữ số tương tự nhau thì tải tương đối đều.
-  \item \textbf{Chi phí giao tiếp}: thấp vì worker không trả về danh sách lớn; chi phí nằm ở dựng bảng, parse token và đồng bộ process.
+  \item \textbf{Phân phối dữ liệu}: input byte và bảng Fibonacci là dữ liệu đọc chung; output là mảng chia sẻ ghi theo vùng không giao nhau.
+  \item \textbf{Phụ thuộc dữ liệu}: các truy vấn độc lập; phụ thuộc duy nhất là bước tiền xử lý bảng phải hoàn tất trước khi chạy worker.
+  \item \textbf{Cân bằng tải}: nếu độ dài truy vấn tương đối đồng đều, chia theo byte-range tạo tải gần cân bằng.
+  \item \textbf{Chi phí giao tiếp}: thấp vì worker ghi trực tiếp vào \func{RawArray}; chi phí chính nằm ở parse token, tính modulo và khởi tạo process.
 \end{itemize}
 
 \subsection{Đánh giá hiệu năng}
 \benchmarktable{Challenge 2}
 
 \paragraph{Nhận xét.}
-\placeholder{Phân tích lợi ích của bảng window so với fast doubling thuần. Nêu trường hợp modulo/size nhỏ khiến overhead dựng bảng và tạo process lớn hơn lợi ích.}
+\placeholder{Phân tích lợi ích của bảng window so với fast doubling thuần. Cần nêu rõ khi số truy vấn nhỏ, overhead dựng bảng và tạo tiến trình có thể lớn hơn lợi ích song song hóa.}

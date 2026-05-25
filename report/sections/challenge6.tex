@@ -2,19 +2,18 @@
 \label{sec:challenge6}
 
 \begin{requirementbox}{Yêu cầu bài toán}
-Với $Q$ bộ dữ liệu điểm 2D, tìm khoảng cách Euclid nhỏ nhất giữa hai điểm bất kỳ trong từng bộ và trả về danh sách kết quả làm tròn 4 chữ số thập phân.
+Với $Q$ bộ dữ liệu, mỗi bộ gồm nhiều điểm 2D, chương trình cần tìm khoảng cách Euclid nhỏ nhất giữa hai điểm bất kỳ trong từng bộ. Kết quả trả về là danh sách $Q$ số thực, mỗi số được làm tròn đến 4 chữ số thập phân.
 \end{requirementbox}
 
-\subsection{Cách hiện thực trong mã nguồn}
-File \codepath{challenge/challenge6.py} đọc toàn bộ token số nguyên, xác định range của từng test case rồi lưu vào \func{\_G\_RANGES}. Với mỗi bộ dữ liệu, \func{\_solve\_one\_raw(case\_idx)} mã hóa điểm $(x,y)$ thành một số nguyên 64-bit sau khi cộng offset để xử lý tọa độ âm. Nếu phát hiện điểm trùng, kết quả là $0.0$. Nếu không, \func{\_closest\_pair\_core} dùng kỹ thuật hash grid: lấy một số điểm đầu làm mẫu để ước lượng khoảng cách tốt nhất ban đầu, sau đó đưa điểm vào lưới kích thước $d$ và chỉ so sánh với các ô lân cận.
+\subsection{Hiện thực đã xây dựng}
+Trong \codepath{challenge/challenge6.py}, toàn bộ input được đọc thành danh sách số nguyên. Chương trình xác định vùng dữ liệu của từng test case và lưu lại trong \func{\_G\_RANGES}. Mỗi điểm $(x,y)$ được mã hóa thành một số nguyên 64-bit sau khi cộng offset, giúp kiểm tra trùng điểm nhanh bằng \func{set}.
+
+Với từng bộ dữ liệu không có điểm trùng, hàm \func{\_closest\_pair\_core} sử dụng kỹ thuật hash grid. Một tập điểm đầu được chọn làm mẫu để ước lượng khoảng cách tốt nhất ban đầu. Sau đó, mỗi điểm mới chỉ cần so sánh với các điểm nằm trong ô lưới hiện tại và các ô lân cận. Khi tìm được khoảng cách nhỏ hơn, kích thước ô lưới được cập nhật để giảm số phép so sánh tiếp theo.
 
 \subsection{Phân tích song song hóa}
-Các bộ dữ liệu độc lập với nhau, nên mã hiện tại song song hóa theo test case:
-\begin{itemize}
-  \item Với $Q=1$ hoặc tổng số điểm nhỏ, chạy tuần tự để tránh overhead process.
-  \item Với nhiều bộ dữ liệu lớn, sắp xếp thứ tự xử lý theo $N$ giảm dần để worker nhận case lớn trước, giảm nguy cơ worker cuối bị giữ bởi một case rất lớn.
-  \item Worker trả về cặp \func{(case\_idx, ans)} để tiến trình chính đặt kết quả về đúng thứ tự ban đầu.
-\end{itemize}
+Các bộ dữ liệu trong input độc lập với nhau. Vì vậy, đơn vị song song phù hợp nhất là từng test case. Mỗi worker nhận chỉ số của một bộ dữ liệu, tự tạo tập điểm, xử lý closest pair và trả về kết quả kèm chỉ số case. Tiến trình chính dùng chỉ số này để đặt kết quả vào đúng vị trí trong danh sách output.
+
+Để cải thiện cân bằng tải, các case được sắp theo kích thước giảm dần trước khi đưa vào pool. Cách làm này giúp các case lớn được xử lý sớm, hạn chế tình trạng một worker phải xử lý case lớn ở cuối trong khi các worker khác đã hoàn tất.
 
 \subsection{Thiết kế thuật toán song song}
 \begin{lstlisting}[caption={Pseudocode song song cho Challenge 6}]
@@ -22,33 +21,57 @@ MAIN(path):
     tokens = parse_all_ints(path)
     ranges = locate_each_case(tokens)
 
-    if small_input:
+    if input_is_small:
         return [solve_case(i) for i in range(Q)]
 
     order = cases_sorted_by_size_descending()
-    answers = [0.0] * Q
     for case_idx, ans in pool.imap_unordered(solve_case, order):
         answers[case_idx] = ans
     return answers
 
 solve_case(case_idx):
-    points = encode_points_as_int_set(case_idx)
+    points = encode_points_as_set(case_idx)
     if duplicate_exists:
         return 0.0
     return closest_pair_hash_grid(points)
 \end{lstlisting}
 
+\subsection{Lưu đồ thuật toán}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=0.8cm and 1.0cm, scale=0.82, transform shape]
+\node[flowstart] (start) {Bắt đầu};
+\node[flowprocess, below=of start] (parse) {Đọc token và xác định range từng case};
+\node[flowdecision, below=of parse] (small) {Input nhỏ hoặc $Q=1$?};
+\node[flowprocess, below left=1.1cm and 1.8cm of small] (seq) {Xử lý tuần tự từng case};
+\node[flowprocess, below right=1.1cm and 1.8cm of small] (par) {Sắp case theo kích thước và xử lý song song};
+\node[flowprocess, below=2.7cm of small] (case) {Mỗi case: mã hóa điểm, kiểm tra trùng, chạy hash grid};
+\node[flowmerge, below=of case] (merge) {Đặt kết quả về đúng vị trí ban đầu};
+\node[flowstart, below=of merge] (end) {Trả về danh sách khoảng cách};
+\draw[flowarrow] (start) -- (parse);
+\draw[flowarrow] (parse) -- (small);
+\draw[flowarrow] (small) -- node[left] {Có} (seq);
+\draw[flowarrow] (small) -- node[right] {Không} (par);
+\draw[flowarrow] (seq) |- (case);
+\draw[flowarrow] (par) |- (case);
+\draw[flowarrow] (case) -- (merge);
+\draw[flowarrow] (merge) -- (end);
+\end{tikzpicture}
+\caption{Luồng xử lý song song của Challenge 6}
+\label{fig:challenge6-flow}
+\end{figure}
+
 \subsection{Dữ liệu, phụ thuộc và chi phí}
 \begin{itemize}
-  \item \textbf{Phân phối dữ liệu}: token input và range từng case là dữ liệu đọc chung; worker nhận chỉ số case.
-  \item \textbf{Phụ thuộc dữ liệu}: không có phụ thuộc giữa các case; trong một case, hash grid là cấu trúc cục bộ của worker.
-  \item \textbf{Cân bằng tải}: sắp xếp case lớn trước giúp cân bằng tốt hơn khi kích thước các case chênh lệch.
-  \item \textbf{Chi phí giao tiếp}: thấp vì worker chỉ trả về một số thực; chi phí chính nằm ở parse input, tạo set điểm và xử lý hash grid.
-  \item \textbf{Độ đúng}: cần nhấn mạnh cơ chế so sánh trong các ô lân cận và cập nhật lại kích thước lưới khi tìm được khoảng cách nhỏ hơn.
+  \item \textbf{Phân phối dữ liệu}: danh sách token và range từng case là dữ liệu đọc chung; worker nhận chỉ số case cần xử lý.
+  \item \textbf{Phụ thuộc dữ liệu}: các case độc lập; trong một case, hash grid là cấu trúc cục bộ của worker.
+  \item \textbf{Cân bằng tải}: sắp xếp case lớn trước giúp giảm thời gian chờ ở cuối quá trình xử lý.
+  \item \textbf{Chi phí giao tiếp}: thấp vì mỗi worker chỉ trả về một số thực và chỉ số case.
+  \item \textbf{Độ đúng}: cần bảo đảm khi cập nhật kích thước lưới, các điểm đã duyệt được đưa lại vào lưới theo kích thước mới.
 \end{itemize}
 
 \subsection{Đánh giá hiệu năng}
 \benchmarktable{Challenge 6}
 
 \paragraph{Nhận xét.}
-\placeholder{Điền số liệu theo số case Q, tổng số điểm và phân bố kích thước case. Giải thích trường hợp Q nhỏ khó tận dụng song song theo case.}
+\placeholder{Điền số liệu theo số case Q, tổng số điểm và phân bố kích thước case. Cần giải thích vì sao Q nhỏ khó tận dụng song song theo test case.}

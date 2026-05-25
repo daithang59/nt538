@@ -2,53 +2,78 @@
 \label{sec:challenge4}
 
 \begin{requirementbox}{Yêu cầu bài toán}
-Sắp xếp ổn định $N$ bản ghi $(v, label)$ theo $v$ giảm dần, nếu trùng $v$ thì \func{label} tăng dần từ điển, nếu cả hai trùng thì giữ thứ tự ban đầu. Không dùng hàm sắp xếp dựng sẵn của Python.
+Cho $N$ bản ghi $(v, label)$, chương trình cần sắp xếp ổn định theo $v$ giảm dần, sau đó theo \func{label} tăng dần từ điển. Nếu cả hai khóa bằng nhau, thứ tự xuất hiện ban đầu phải được giữ nguyên. Đề bài không cho phép sử dụng các hàm sắp xếp dựng sẵn của Python.
 \end{requirementbox}
 
-\subsection{Cách hiện thực trong mã nguồn}
-File \codepath{challenge/challenge4.py} biểu diễn mỗi bản ghi thành tuple \func{(-v, label)} để dùng thứ tự tăng dần của tuple thay cho yêu cầu $v$ giảm dần. Thuật toán sort cục bộ là bottom-up merge sort tự cài trong \func{bottom\_up\_merge\_sort}. Với input lớn, \func{parallel\_sort} chia records thành nhiều đoạn, sort từng đoạn bằng \func{multiprocessing.Pool.map}, sau đó merge từng cặp đoạn bằng \func{merge\_two} cho tới khi còn một danh sách.
+\subsection{Hiện thực đã xây dựng}
+Trong \codepath{challenge/challenge4.py}, mỗi bản ghi được biến đổi thành \func{(-v, label)}. Cách biểu diễn này cho phép dùng thứ tự tăng dần tự nhiên của tuple để đạt được yêu cầu $v$ giảm dần và \func{label} tăng dần. Thuật toán sắp xếp cục bộ là bottom-up merge sort do nhóm tự hiện thực.
+
+Khi số lượng bản ghi đủ lớn, chương trình chia mảng thành các chunk liên tiếp. Mỗi worker sắp xếp một chunk bằng \func{bottom\_up\_merge\_sort}. Sau đó, tiến trình chính lần lượt merge các chunk đã sắp xếp bằng hàm \func{merge\_two} cho đến khi thu được danh sách cuối cùng.
 
 \subsection{Phân tích song song hóa}
-Merge sort có hai mức có thể song song:
-\begin{itemize}
-  \item Sort các chunk ban đầu độc lập.
-  \item Merge các cặp chunk theo từng tầng.
-\end{itemize}
-Mã hiện tại song song hóa giai đoạn sort chunk, còn giai đoạn merge được thực hiện trong tiến trình chính. Đây là lựa chọn đơn giản, giảm chi phí trao đổi dữ liệu giữa process nhưng có thể khiến merge cuối trở thành bottleneck khi $N$ rất lớn.
+Merge sort cho phép tách giai đoạn sắp xếp cục bộ trên các đoạn độc lập. Đây là phần được song song hóa trong mã nguồn hiện tại. Giai đoạn merge phụ thuộc vào kết quả của các chunk, nên được thực hiện sau khi toàn bộ worker hoàn tất.
+
+Thiết kế này ưu tiên tính đơn giản và độ tin cậy. Việc để tiến trình chính merge kết quả giúp giảm số lần truyền dữ liệu qua lại giữa các process. Đổi lại, khi $N$ rất lớn, giai đoạn merge tuần tự có thể trở thành nút thắt hiệu năng.
 
 \subsection{Thiết kế thuật toán song song}
 \begin{lstlisting}[caption={Pseudocode song song cho Challenge 4}]
 MAIN(path):
     records = read_records(path)
-    transformed = [(-value, label) for each record]
-    sorted_records = parallel_sort(transformed)
-    return [(-value, label.decode()) for each item in sorted_records]
+    keys = [(-value, label) for each record]
+    sorted_keys = parallel_sort(keys)
+    return restore_original_value(sorted_keys)
 
 parallel_sort(records):
     if len(records) < threshold:
         return bottom_up_merge_sort(records)
 
-    ranges = split_array_ranges(records, workers)
+    ranges = split_array_ranges(records)
     chunks = pool.map(sort_range, ranges)
     return merge_chunks(chunks)
 \end{lstlisting}
 
+\subsection{Lưu đồ thuật toán}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=0.8cm and 1.0cm, scale=0.82, transform shape]
+\node[flowstart] (start) {Bắt đầu};
+\node[flowprocess, below=of start] (read) {Đọc $N$ bản ghi $(v, label)$};
+\node[flowprocess, below=of read] (key) {Chuyển khóa thành $(-v, label)$};
+\node[flowdecision, below=of key] (small) {$N$ nhỏ hơn ngưỡng?};
+\node[flowprocess, below left=1.1cm and 1.8cm of small] (seq) {Sắp xếp tuần tự bằng merge sort};
+\node[flowprocess, below right=1.1cm and 1.8cm of small] (par) {Chia chunk và sort song song};
+\node[flowmerge, below=2.7cm of small] (merge) {Merge các chunk theo thứ tự};
+\node[flowstart, below=of merge] (end) {Khôi phục $v$ và trả kết quả};
+\draw[flowarrow] (start) -- (read);
+\draw[flowarrow] (read) -- (key);
+\draw[flowarrow] (key) -- (small);
+\draw[flowarrow] (small) -- node[left] {Có} (seq);
+\draw[flowarrow] (small) -- node[right] {Không} (par);
+\draw[flowarrow] (seq) |- (merge);
+\draw[flowarrow] (par) |- (merge);
+\draw[flowarrow] (merge) -- (end);
+\end{tikzpicture}
+\caption{Luồng xử lý song song của Challenge 4}
+\label{fig:challenge4-flow}
+\end{figure}
+
 \subsection{Tính ổn định}
-Trong merge sort, khi hai phần tử bằng nhau, hàm merge chọn phần tử bên trái trước vì điều kiện \func{a <= b}. Điều này giữ thứ tự trong từng chunk. Khi merge các chunk theo thứ tự ban đầu, các phần tử bằng nhau ở chunk bên trái cũng được giữ trước chunk bên phải, nên tính ổn định được bảo toàn.
+Tính ổn định được bảo đảm trong bước merge. Khi hai phần tử có khóa bằng nhau, hàm merge chọn phần tử ở nửa trái trước nhờ điều kiện so sánh \func{a <= b}. Vì các chunk được tạo theo thứ tự xuất hiện ban đầu và được merge theo đúng thứ tự đó, các bản ghi trùng khóa vẫn giữ được thứ tự tương đối ban đầu.
 
 \subsection{Dữ liệu, phụ thuộc và chi phí}
 \begin{itemize}
-  \item \textbf{Phân phối dữ liệu}: mảng records được chia thành các range; worker đọc slice tương ứng từ biến toàn cục.
-  \item \textbf{Phụ thuộc dữ liệu}: sort cục bộ độc lập; merge phụ thuộc vào kết quả sort của các chunk.
-  \item \textbf{Cân bằng tải}: chia theo số lượng record nên cân bằng tương đối đều.
-  \item \textbf{Chi phí giao tiếp}: đáng kể vì mỗi worker trả về một danh sách đã sort; merge tuần tự cũng tiêu tốn \bigO{N \log p}.
+  \item \textbf{Phân phối dữ liệu}: mảng bản ghi được chia thành các đoạn liên tiếp; worker xử lý một đoạn.
+  \item \textbf{Phụ thuộc dữ liệu}: các chunk độc lập trong giai đoạn sort, nhưng phụ thuộc khi merge.
+  \item \textbf{Cân bằng tải}: chia theo số lượng bản ghi giúp tải giữa các worker tương đối đồng đều.
+  \item \textbf{Chi phí giao tiếp}: đáng kể vì mỗi worker trả về một danh sách đã sắp xếp; merge cuối có độ phức tạp \bigO{N \log p}.
 \end{itemize}
 
 \subsection{Đánh giá hiệu năng}
 \begin{table}[H]
 \centering
 \caption{Kết quả đo hiệu năng cho Challenge 4}
-\begin{tabular}{@{}rrrrrr@{}}
+\resizebox{\linewidth}{!}{%
+\begin{tabular}{@{}c c c c c c@{}}
 \toprule
 $N$ & Số worker & $T_{\mathrm{seq}}$ (s) & $T_{\mathrm{par}}$ (s) & Speedup & Efficiency \\
 \midrule
@@ -57,7 +82,8 @@ $10^5$ & \placeholder{p} & \placeholder{tseq} & \placeholder{tpar} & \placeholde
 $10^6$ & \placeholder{p} & \placeholder{tseq} & \placeholder{tpar} & \placeholder{speedup} & \placeholder{eff} \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 
 \paragraph{Nhận xét.}
-\placeholder{Nêu rõ ngưỡng N nhỏ có thể chạy tuần tự nhanh hơn do overhead; với N lớn, sort chunk song song có lợi nhưng merge tuần tự và chi phí truyền list làm speedup không tuyến tính.}
+\placeholder{Nêu rõ ngưỡng N nhỏ có thể chạy tuần tự nhanh hơn do overhead. Với N lớn, sort chunk song song có lợi, nhưng merge tuần tự và chi phí truyền danh sách khiến speedup không tuyến tính.}

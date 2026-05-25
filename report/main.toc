@@ -1,56 +1,63 @@
 \xpg@aux {}{vietnamese}
 \contentsline {section}{\numberline {1}Tổng quan yêu cầu và phương pháp đánh giá}{5}{section.1}%
-\contentsline {subsection}{\numberline {1.1}Mục tiêu}{5}{subsection.1.1}%
-\contentsline {subsection}{\numberline {1.2}Yêu cầu bắt buộc trong báo cáo}{5}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.1}Mục tiêu báo cáo}{5}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Phạm vi nội dung}{5}{subsection.1.2}%
 \contentsline {subsection}{\numberline {1.3}Môi trường thực nghiệm}{5}{subsection.1.3}%
-\contentsline {subsection}{\numberline {1.4}Cách đo và công thức}{5}{subsection.1.4}%
+\contentsline {subsection}{\numberline {1.4}Phương pháp đo hiệu năng}{5}{subsection.1.4}%
 \contentsline {subsection}{\numberline {1.5}Tóm tắt mã nguồn hiện có}{6}{subsection.1.5}%
 \contentsline {section}{\numberline {2}Challenge 1: Tính tổng mảng số nguyên}{6}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Cách hiện thực trong mã nguồn}{6}{subsection.2.1}%
-\contentsline {subsection}{\numberline {2.2}Phân tích song song hóa}{6}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.1}Hiện thực đã xây dựng}{6}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Phân tích song song hóa}{7}{subsection.2.2}%
 \contentsline {subsection}{\numberline {2.3}Thiết kế thuật toán song song}{7}{subsection.2.3}%
-\contentsline {subsection}{\numberline {2.4}Dữ liệu, phụ thuộc và chi phí}{7}{subsection.2.4}%
-\contentsline {subsection}{\numberline {2.5}Đánh giá hiệu năng}{7}{subsection.2.5}%
-\contentsline {paragraph}{Nhận xét.}{7}{section*.8}%
-\contentsline {section}{\numberline {3}Challenge 2: Số Fibonacci modulo}{8}{section.3}%
-\contentsline {subsection}{\numberline {3.1}Cách hiện thực trong mã nguồn}{8}{subsection.3.1}%
-\contentsline {subsection}{\numberline {3.2}Phân tích song song hóa}{8}{subsection.3.2}%
-\contentsline {subsection}{\numberline {3.3}Thiết kế thuật toán song song}{8}{subsection.3.3}%
-\contentsline {subsection}{\numberline {3.4}Dữ liệu, phụ thuộc và chi phí}{9}{subsection.3.4}%
-\contentsline {subsection}{\numberline {3.5}Đánh giá hiệu năng}{9}{subsection.3.5}%
-\contentsline {paragraph}{Nhận xét.}{9}{section*.10}%
-\contentsline {section}{\numberline {4}Challenge 3: Nhân hai ma trận}{9}{section.4}%
-\contentsline {subsection}{\numberline {4.1}Cách hiện thực trong mã nguồn}{9}{subsection.4.1}%
-\contentsline {subsection}{\numberline {4.2}Phân tích song song hóa}{10}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Thiết kế thuật toán song song}{10}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Dữ liệu, phụ thuộc và chi phí}{10}{subsection.4.4}%
-\contentsline {subsection}{\numberline {4.5}Đánh giá hiệu năng}{11}{subsection.4.5}%
+\contentsline {subsection}{\numberline {2.4}Lưu đồ thuật toán}{8}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Dữ liệu, phụ thuộc và chi phí}{8}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}Đánh giá hiệu năng}{8}{subsection.2.6}%
+\contentsline {paragraph}{Nhận xét.}{9}{section*.9}%
+\contentsline {section}{\numberline {3}Challenge 2: Số Fibonacci modulo}{9}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Hiện thực đã xây dựng}{9}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Phân tích song song hóa}{9}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Thiết kế thuật toán song song}{9}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}Lưu đồ thuật toán}{10}{subsection.3.4}%
+\contentsline {subsection}{\numberline {3.5}Dữ liệu, phụ thuộc và chi phí}{10}{subsection.3.5}%
+\contentsline {subsection}{\numberline {3.6}Đánh giá hiệu năng}{11}{subsection.3.6}%
 \contentsline {paragraph}{Nhận xét.}{11}{section*.12}%
-\contentsline {section}{\numberline {5}Challenge 4: Sắp xếp mảng một chiều}{11}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Cách hiện thực trong mã nguồn}{11}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Phân tích song song hóa}{11}{subsection.5.2}%
-\contentsline {subsection}{\numberline {5.3}Thiết kế thuật toán song song}{12}{subsection.5.3}%
-\contentsline {subsection}{\numberline {5.4}Tính ổn định}{12}{subsection.5.4}%
-\contentsline {subsection}{\numberline {5.5}Dữ liệu, phụ thuộc và chi phí}{12}{subsection.5.5}%
-\contentsline {subsection}{\numberline {5.6}Đánh giá hiệu năng}{12}{subsection.5.6}%
-\contentsline {paragraph}{Nhận xét.}{12}{section*.14}%
-\contentsline {section}{\numberline {6}Challenge 5: Tìm kiếm trong mảng số nguyên lớn}{13}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Hiện trạng mã nguồn}{13}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}Thiết kế đề xuất}{13}{subsection.6.2}%
-\contentsline {subsection}{\numberline {6.3}Thiết kế thuật toán song song}{13}{subsection.6.3}%
-\contentsline {subsection}{\numberline {6.4}Dữ liệu, phụ thuộc và chi phí}{13}{subsection.6.4}%
-\contentsline {subsection}{\numberline {6.5}Đánh giá hiệu năng}{14}{subsection.6.5}%
-\contentsline {paragraph}{Nhận xét.}{14}{section*.16}%
-\contentsline {section}{\numberline {7}Challenge 6: Phân tích không gian nhúng}{14}{section.7}%
-\contentsline {subsection}{\numberline {7.1}Cách hiện thực trong mã nguồn}{14}{subsection.7.1}%
-\contentsline {subsection}{\numberline {7.2}Phân tích song song hóa}{14}{subsection.7.2}%
-\contentsline {subsection}{\numberline {7.3}Thiết kế thuật toán song song}{15}{subsection.7.3}%
-\contentsline {subsection}{\numberline {7.4}Dữ liệu, phụ thuộc và chi phí}{15}{subsection.7.4}%
-\contentsline {subsection}{\numberline {7.5}Đánh giá hiệu năng}{15}{subsection.7.5}%
+\contentsline {section}{\numberline {4}Challenge 3: Nhân hai ma trận}{11}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Hiện thực đã xây dựng}{11}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Phân tích song song hóa}{11}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Thiết kế thuật toán song song}{11}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Lưu đồ thuật toán}{12}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Dữ liệu, phụ thuộc và chi phí}{12}{subsection.4.5}%
+\contentsline {subsection}{\numberline {4.6}Đánh giá hiệu năng}{13}{subsection.4.6}%
+\contentsline {paragraph}{Nhận xét.}{13}{section*.15}%
+\contentsline {section}{\numberline {5}Challenge 4: Sắp xếp mảng một chiều}{13}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Hiện thực đã xây dựng}{13}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Phân tích song song hóa}{14}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Thiết kế thuật toán song song}{14}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Lưu đồ thuật toán}{15}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Tính ổn định}{15}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}Dữ liệu, phụ thuộc và chi phí}{15}{subsection.5.6}%
+\contentsline {subsection}{\numberline {5.7}Đánh giá hiệu năng}{16}{subsection.5.7}%
 \contentsline {paragraph}{Nhận xét.}{16}{section*.18}%
-\contentsline {section}{\numberline {8}Kết luận}{16}{section.8}%
-\contentsline {subsection}{\numberline {8.1}Tổng hợp kết quả}{16}{subsection.8.1}%
-\contentsline {subsection}{\numberline {8.2}Checklist trước khi nộp}{16}{subsection.8.2}%
-\contentsline {section}{\numberline {A}Phụ lục: Mẫu đo hiệu năng}{16}{appendix.A}%
-\contentsline {section}{\numberline {B}Phụ lục: Mẫu phiên bản tuần tự tham chiếu}{17}{appendix.B}%
-\contentsline {section}{\numberline {C}Phụ lục: Checklist nội dung theo đề}{17}{appendix.C}%
+\contentsline {section}{\numberline {6}Challenge 5: Tìm kiếm trong mảng số nguyên lớn}{16}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Hiện trạng mã nguồn}{16}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Thiết kế đề xuất}{16}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Thiết kế thuật toán song song}{16}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Lưu đồ thuật toán}{17}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}Dữ liệu, phụ thuộc và chi phí}{17}{subsection.6.5}%
+\contentsline {subsection}{\numberline {6.6}Đánh giá hiệu năng}{18}{subsection.6.6}%
+\contentsline {paragraph}{Nhận xét.}{18}{section*.21}%
+\contentsline {section}{\numberline {7}Challenge 6: Phân tích không gian nhúng}{18}{section.7}%
+\contentsline {subsection}{\numberline {7.1}Hiện thực đã xây dựng}{18}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Phân tích song song hóa}{18}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Thiết kế thuật toán song song}{19}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}Lưu đồ thuật toán}{20}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}Dữ liệu, phụ thuộc và chi phí}{20}{subsection.7.5}%
+\contentsline {subsection}{\numberline {7.6}Đánh giá hiệu năng}{21}{subsection.7.6}%
+\contentsline {paragraph}{Nhận xét.}{21}{section*.24}%
+\contentsline {section}{\numberline {8}Kết luận}{21}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Tổng hợp kết quả}{21}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Nhận định chung}{21}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Checklist trước khi nộp}{22}{subsection.8.3}%
+\contentsline {section}{\numberline {A}Phụ lục: Mẫu đo hiệu năng}{22}{appendix.A}%
+\contentsline {section}{\numberline {B}Phụ lục: Mẫu phiên bản tuần tự tham chiếu}{22}{appendix.B}%
+\contentsline {section}{\numberline {C}Phụ lục: Checklist nội dung theo đề}{23}{appendix.C}%

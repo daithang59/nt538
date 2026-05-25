@@ -2,20 +2,22 @@
 \label{sec:challenge5}
 
 \begin{requirementbox}{Yêu cầu bài toán}
-Input gồm khóa $K$ và một mảng số nguyên lớn tối đa $10^6$ phần tử. Cần tìm chỉ số nhỏ nhất $i$ sao cho $A[i] = K$, nếu không có thì trả về $-1$. Không dùng hàm tìm kiếm dựng sẵn; cần chia mảng thành nhiều đoạn và phối hợp worker.
+Input gồm khóa cần tìm $K$ và một mảng số nguyên $A$ có thể chứa tối đa $10^6$ phần tử. Chương trình cần trả về chỉ số nhỏ nhất $i$ sao cho $A[i] = K$; nếu không tồn tại, kết quả là $-1$. Đề bài yêu cầu tự chia mảng và không sử dụng hàm tìm kiếm dựng sẵn.
 \end{requirementbox}
 
 \subsection{Hiện trạng mã nguồn}
-File \codepath{challenge/challenge5.py} hiện đang rỗng tại thời điểm lập báo cáo. Vì vậy section này được viết theo thiết kế đề xuất từ yêu cầu bài toán. Sau khi nhóm bổ sung phiên bản cuối của Challenge 5, cần cập nhật lại phần ``Cách hiện thực trong mã nguồn'' để khớp chính xác với code.
+Tại thời điểm lập báo cáo, \codepath{challenge/challenge5.py} chưa có nội dung hiện thực. Vì vậy phần này được trình bày như một thiết kế đề xuất dựa trên yêu cầu của đề bài. Khi nhóm bổ sung mã nguồn cuối cùng cho challenge này, cần cập nhật lại mô tả hiện thực để phản ánh chính xác phiên bản đã nộp.
 
 \subsection{Thiết kế đề xuất}
-Chiến lược song song hóa phù hợp là chia mảng $A$ thành các đoạn liên tiếp. Mỗi worker tìm vị trí đầu tiên của $K$ trong đoạn của mình và trả về chỉ số toàn cục nhỏ nhất trong đoạn, hoặc $-1$ nếu không tìm thấy. Tiến trình chính lấy \func{min} trên các kết quả khác $-1$.
+Chiến lược song song hóa phù hợp là chia mảng $A$ thành các đoạn chỉ số liên tiếp. Mỗi worker quét tuyến tính đoạn được giao và trả về vị trí đầu tiên tìm thấy $K$ trong đoạn đó. Tiến trình chính lấy chỉ số nhỏ nhất trong các kết quả hợp lệ.
+
+Cách tiếp cận này bảo đảm tính đúng đắn vì mọi đoạn tạo thành một phân hoạch của mảng ban đầu. Nếu một worker trả về chỉ số trong đoạn của nó, đó là vị trí đầu tiên của $K$ trong đoạn đó. Lấy giá trị nhỏ nhất trên toàn bộ các đoạn sẽ cho ra vị trí đầu tiên của $K$ trong toàn mảng.
 
 \subsection{Thiết kế thuật toán song song}
 \begin{lstlisting}[caption={Pseudocode đề xuất cho Challenge 5}]
 MAIN(path):
     K, A = parse_input(path)
-    ranges = split_index_ranges(len(A), workers)
+    ranges = split_index_ranges(len(A))
 
     candidates = pool.map(search_range, ranges)
     valid = [idx for idx in candidates if idx != -1]
@@ -30,16 +32,41 @@ search_range(start, end):
     return -1
 \end{lstlisting}
 
+\subsection{Lưu đồ thuật toán}
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=0.8cm and 1.0cm, scale=0.82, transform shape]
+\node[flowstart] (start) {Bắt đầu};
+\node[flowprocess, below=of start] (parse) {Đọc khóa $K$ và mảng $A$};
+\node[flowprocess, below=of parse] (split) {Chia mảng thành các đoạn chỉ số};
+\node[flowprocess, below=of split] (worker) {Worker quét đoạn và trả về vị trí đầu tiên};
+\node[flowdecision, below=of worker] (found) {Có kết quả hợp lệ?};
+\node[flowmerge, below left=1.1cm and 1.8cm of found] (min) {Lấy chỉ số nhỏ nhất};
+\node[flowmerge, below right=1.1cm and 1.8cm of found] (minus) {Gán kết quả $-1$};
+\node[flowstart, below=2.7cm of found] (end) {Trả về kết quả};
+\draw[flowarrow] (start) -- (parse);
+\draw[flowarrow] (parse) -- (split);
+\draw[flowarrow] (split) -- (worker);
+\draw[flowarrow] (worker) -- (found);
+\draw[flowarrow] (found) -- node[left] {Có} (min);
+\draw[flowarrow] (found) -- node[right] {Không} (minus);
+\draw[flowarrow] (min) |- (end);
+\draw[flowarrow] (minus) |- (end);
+\end{tikzpicture}
+\caption{Luồng xử lý đề xuất cho Challenge 5}
+\label{fig:challenge5-flow}
+\end{figure}
+
 \subsection{Dữ liệu, phụ thuộc và chi phí}
 \begin{itemize}
-  \item \textbf{Phân phối dữ liệu}: mảng $A$ có thể đặt trong biến toàn cục để worker chỉ nhận khoảng chỉ số.
-  \item \textbf{Phụ thuộc dữ liệu}: mỗi đoạn tìm kiếm độc lập; bước reduce chỉ chọn chỉ số nhỏ nhất.
-  \item \textbf{Cân bằng tải}: nếu không có cơ chế dừng sớm, mỗi worker quét gần như số phần tử bằng nhau. Nếu có dừng sớm, cần đồng bộ cẩn thận để vẫn đảm bảo chỉ số nhỏ nhất.
-  \item \textbf{Chi phí giao tiếp}: thấp vì mỗi worker chỉ trả về một chỉ số.
+  \item \textbf{Phân phối dữ liệu}: mảng $A$ có thể được lưu trong biến toàn cục; worker chỉ nhận khoảng chỉ số cần quét.
+  \item \textbf{Phụ thuộc dữ liệu}: các đoạn tìm kiếm độc lập; bước reduce chỉ chọn chỉ số nhỏ nhất.
+  \item \textbf{Cân bằng tải}: nếu không có dừng sớm toàn cục, mỗi worker quét số phần tử gần bằng nhau.
+  \item \textbf{Chi phí giao tiếp}: thấp vì mỗi worker chỉ trả về một số nguyên.
 \end{itemize}
 
 \subsection{Đánh giá hiệu năng}
 \benchmarktable{Challenge 5}
 
 \paragraph{Nhận xét.}
-\placeholder{Sau khi có code cuối, điền số liệu cho các trường hợp K xuất hiện đầu mảng, giữa mảng, cuối mảng và không xuất hiện. So sánh ảnh hưởng của dừng sớm nếu có.}
+\placeholder{Sau khi có mã nguồn cuối, điền số liệu cho các trường hợp K xuất hiện đầu mảng, giữa mảng, cuối mảng và không xuất hiện. Nếu có cơ chế dừng sớm, cần giải thích cách vẫn bảo đảm chỉ số nhỏ nhất.}

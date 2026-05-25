@@ -86,6 +86,11 @@ class Challenge6Tests(unittest.TestCase):
                 packed = {_pack(x, y) for x, y in points}
                 self.assertEqual(challenge6._closest_pair_core(packed), _brute(points))
 
+    def test_parallel_x_finds_pair_across_partition_boundary(self):
+        points = [(-1000, 0), (0, 500), (1, 500), (1000, 0)]
+        packed = {_pack(x, y) for x, y in points}
+        self.assertEqual(challenge6._closest_pair_parallel_x(packed, 2), 1.0)
+
     def test_parallel_plan_keeps_small_two_case_inputs_serial(self):
         ranges = [(1, 20_000), (40_002, 20_000)]
         self.assertEqual(challenge6._choose_parallel_plan(2, 40_000, ranges, 8), (1, 1))

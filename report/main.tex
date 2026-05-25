@@ -82,6 +82,7 @@
 \begin{table}[H]
 \centering
 \caption{Kết quả đo hiệu năng cho #1}
+\resizebox{\linewidth}{!}{%
 \begin{tabular}{@{}rrrrrr@{}}
 \toprule
 Kích thước & Số worker & $T_{\mathrm{seq}}$ (s) & $T_{\mathrm{par}}$ (s) & Speedup & Efficiency \\
@@ -91,6 +92,7 @@ Kích thước & Số worker & $T_{\mathrm{seq}}$ (s) & $T_{\mathrm{par}}$ (s) &
 \placeholder{size} & \placeholder{p} & \placeholder{tseq} & \placeholder{tpar} & \placeholder{speedup} & \placeholder{eff} \\
 \bottomrule
 \end{tabular}
+}
 \end{table}
 }
 

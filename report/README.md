@@ -6,7 +6,7 @@ Template này được tạo theo đề `_Lab__Parallel_Computing.pdf` và mã n
 
 - `main.tex`: cấu hình LaTeX, metadata nhóm/key/thành viên, macro dùng chung.
 - `sections/01_overview.tex`: tổng quan yêu cầu và cách đo hiệu năng.
-- `sections/challenge1.tex` đến `sections/challenge6.tex`: nội dung cho từng challenge.
+- `sections/challenge1.tex` đến `sections/challenge6.tex`: nội dung cho từng challenge, gồm phân tích và lưu đồ thuật toán.
 - `sections/08_conclusion.tex`: tổng hợp kết quả và checklist trước khi nộp.
 - `sections/09_appendix.tex`: phụ lục đo hiệu năng và rubric đối chiếu đề.
 
