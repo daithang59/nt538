@@ -57,6 +57,18 @@ parallel_sort(records):
 \label{fig:challenge4-flow}
 \end{figure}
 
+\subsection{Giải thích vai trò các bước}
+Challenge 4 gồm hai pha chính: sắp xếp cục bộ và merge toàn cục. Trước khi chia việc, mỗi bản ghi $(v, label)$ được đổi thành khóa $(-v, label)$. Phép đổi dấu $v$ biến yêu cầu sắp xếp giảm dần theo $v$ thành sắp xếp tăng dần theo khóa thứ nhất; khóa \func{label} vẫn giữ thứ tự tăng dần từ điển.
+
+Trong pha song song, tiến trình chính chia mảng thành các chunk liên tiếp. Mỗi worker chạy merge sort tự hiện thực trên một chunk và trả về chunk đã sắp xếp. Các worker không tương tác trực tiếp với nhau vì thứ tự bên trong mỗi chunk chỉ phụ thuộc vào dữ liệu của chunk đó. Sau đó, tiến trình chính merge các chunk theo thứ tự. Đây là bước quyết định tính đúng của toàn bộ danh sách, vì các chunk riêng lẻ đã có thứ tự nhưng chưa tạo thành một thứ tự toàn cục.
+
+Vai trò của bước merge đặc biệt quan trọng đối với tính ổn định. Khi hai bản ghi có khóa bằng nhau, phần tử đến từ nửa trái được chọn trước. Do các chunk ban đầu giữ thứ tự xuất hiện trong input và được merge theo thứ tự từ trái sang phải, các bản ghi trùng cả $v$ và \func{label} vẫn giữ thứ tự tương đối ban đầu.
+
+\subsection{Tiềm năng tăng tốc và ví dụ minh họa}
+Sắp xếp có chi phí \bigO{N \log N}. Khi $N$ lớn, việc sắp xếp cục bộ các chunk song song có thể giảm đáng kể thời gian của pha sort. Tuy nhiên, speedup bị giới hạn bởi pha merge ở tiến trình chính và chi phí truyền các chunk đã sắp xếp từ worker về. Vì vậy, tiềm năng tăng tốc tốt nhất thường xuất hiện ở input lớn, còn input nhỏ có thể không có lợi do overhead process.
+
+Ví dụ với các bản ghi \func{(5, QA), (5, QB), (-1, ID), (9, QA)}, sau khi đổi khóa ta có \func{(-5, QA)}, \func{(-5, QB)}, \func{(1, ID)}, \func{(-9, QA)}. Nếu chia thành hai chunk, worker 1 sắp \func{(5, QA), (5, QB)} và worker 2 sắp \func{(-1, ID), (9, QA)} thành \func{(9, QA), (-1, ID)}. Bước merge toàn cục tạo kết quả \func{(9, QA), (5, QA), (5, QB), (-1, ID)}. Cặp $(5, QA)$ và $(5, QB)$ minh họa tiêu chí phụ theo \func{label}; nếu hai bản ghi hoàn toàn trùng khóa, thứ tự ban đầu được giữ nhờ merge ổn định.
+
 \subsection{Tính ổn định}
 Tính ổn định được bảo đảm trong bước merge. Khi hai phần tử có khóa bằng nhau, hàm merge chọn phần tử ở nửa trái trước nhờ điều kiện so sánh \func{a <= b}. Vì các chunk được tạo theo thứ tự xuất hiện ban đầu và được merge theo đúng thứ tự đó, các bản ghi trùng khóa vẫn giữ được thứ tự tương đối ban đầu.
 

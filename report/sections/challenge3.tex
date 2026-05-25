@@ -56,6 +56,18 @@ MAIN(path):
 \label{fig:challenge3-flow}
 \end{figure}
 
+\subsection{Giải thích vai trò các bước}
+Trong Challenge 3, bước chuyển vị $B$ giữ vai trò quan trọng đối với hiệu năng. Khi $B$ được lưu thành $B^T$, phép tính $C_{ij} = \sum_k A_{ik}B_{kj}$ trở thành tích vô hướng giữa dòng $A_i$ và dòng $B^T_j$. Nhờ đó, worker truy cập hai dãy liên tiếp trong bộ nhớ thay vì phải nhảy theo cột của ma trận $B$ ban đầu.
+
+Phương pháp chia việc được chọn là chia theo cụm dòng của ma trận $C$. Mỗi worker nhận một khoảng dòng $[r_{\mathrm{start}}, r_{\mathrm{end}})$ và tính toàn bộ các phần tử $C_{ij}$ trong khoảng đó. Trong lúc tính từng dòng, worker đồng thời xác định phần tử đường chéo chính nếu $i=j$, phần tử đường chéo phụ nếu $i+j=N-1$, và cộng các phần tử vào tổng cục bộ. Vì các khoảng dòng không giao nhau, không có hai worker nào cùng ghi hoặc cùng trả về một dòng của $C$.
+
+Tiến trình chính nhận kết quả theo từng chunk, đặt các dòng vào đúng vị trí trong ma trận kết quả, ghép các phần đường chéo và cộng các tổng cục bộ. Như vậy, từng bước trong thuật toán đều đóng góp trực tiếp vào cấu trúc output: worker tạo các dòng của $C$, còn tiến trình chính bảo toàn thứ tự dòng và tổng hợp các giá trị phụ trợ.
+
+\subsection{Tiềm năng tăng tốc và ví dụ minh họa}
+Nhân ma trận có khối lượng tính toán lớn, xấp xỉ \bigO{N^3}. Vì vậy khi $N$ tăng, phần tính toán trên mỗi worker tăng nhanh hơn chi phí tạo process và ghép kết quả, làm cho bài toán có tiềm năng speedup rõ rệt hơn các bài toán chỉ quét tuyến tính. Tuy nhiên, speedup không thể tăng tuyến tính mãi vì ma trận kết quả có kích thước \bigO{N^2}, gây áp lực bộ nhớ và chi phí truyền dữ liệu giữa process.
+
+Ví dụ với $N=2$, ma trận $A=\begin{bmatrix}1&2\\3&4\end{bmatrix}$ và $B=\begin{bmatrix}5&6\\7&8\end{bmatrix}$. Nếu chia mỗi worker một dòng, worker 1 tính dòng 0 của $C$ là $[19,22]$, đồng thời ghi nhận phần tử đường chéo chính $19$ và đường chéo phụ $22$. Worker 2 tính dòng 1 là $[43,50]$, ghi nhận đường chéo phụ $43$ và đường chéo chính $50$. Tiến trình chính ghép hai dòng thành $C$, thu được \func{diag\_main = [19, 50]}, \func{diag\_secondary = [22, 43]} và tổng $134$.
+
 \subsection{Dữ liệu, phụ thuộc và chi phí}
 \begin{itemize}
   \item \textbf{Phân phối dữ liệu}: $A$ và $B^T$ được dùng như dữ liệu đọc chung; worker trả về các dòng $C$ thuộc khoảng phụ trách.

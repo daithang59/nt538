@@ -54,6 +54,16 @@ process_range(start, end):
 \label{fig:challenge1-flow}
 \end{figure}
 
+\subsection{Giải thích vai trò các bước}
+Luồng xử lý của Challenge 1 gồm hai vai trò rõ ràng. Tiến trình chính chịu trách nhiệm đọc input, bỏ qua dòng đầu chứa $N$, xác định các biên token và tạo danh sách byte-range. Việc chuẩn bị này bảo đảm mỗi worker nhận một đoạn dữ liệu hợp lệ, không bắt đầu hoặc kết thúc ở giữa một số.
+
+Các worker thực hiện cùng một thủ tục trên các đoạn khác nhau: tách token, chuyển token sang số thực, kiểm tra ba điều kiện của đề bài và cộng vào biến tổng cục bộ. Worker không cần biết kết quả của worker khác, vì một phần tử hợp lệ chỉ đóng góp đúng một lần vào đúng đoạn chứa nó. Sau khi tất cả worker trả về, tiến trình chính cộng các tổng cục bộ. Bước reduce này là phép cộng kết hợp, nên thứ tự gom kết quả không làm thay đổi giá trị cuối cùng.
+
+\subsection{Tiềm năng tăng tốc và ví dụ minh họa}
+So với phiên bản tuần tự phải quét toàn bộ token trên một tiến trình, phiên bản song song có thể rút ngắn thời gian khi $N$ lớn vì phần kiểm tra từng token độc lập hoàn toàn. Speedup kỳ vọng tăng khi số lượng token đủ lớn để bù chi phí tạo process và truyền tham số. Với input nhỏ, overhead của \func{multiprocessing} có thể làm chương trình song song chậm hơn.
+
+Ví dụ, với dãy \func{3 4.5 -6 12.0 7 18}, nếu chia thành hai đoạn, worker thứ nhất có thể xử lý \func{3 4.5 -6} và trả về $3$, worker thứ hai xử lý \func{12.0 7 18} và trả về $30$. Tiến trình chính cộng $3 + 30 = 33$, đúng với kết quả cần trả về. Ví dụ này cũng thể hiện vai trò của bước chia dữ liệu: mỗi token chỉ thuộc một worker, còn bước reduce chỉ gom các tổng cục bộ.
+
 \subsection{Dữ liệu, phụ thuộc và chi phí}
 \begin{itemize}
   \item \textbf{Phân phối dữ liệu}: dữ liệu đầu vào được lưu trong biến toàn cục; worker chỉ nhận cặp chỉ số \func{(start, end)}.

@@ -61,6 +61,18 @@ solve_case(case_idx):
 \label{fig:challenge6-flow}
 \end{figure}
 
+\subsection{Giải thích vai trò các bước}
+Tiến trình chính đọc toàn bộ input, xác định vị trí dữ liệu của từng test case và lưu các khoảng này để worker có thể truy cập đúng phần dữ liệu cần xử lý. Mỗi test case độc lập về dữ liệu và kết quả, nên worker chỉ cần nhận chỉ số case, tạo tập điểm cục bộ và trả về khoảng cách nhỏ nhất của case đó.
+
+Trong từng worker, bước mã hóa điểm giúp biến cặp tọa độ $(x,y)$ thành một khóa nguyên duy nhất để kiểm tra trùng điểm nhanh. Nếu phát hiện hai điểm trùng nhau, khoảng cách nhỏ nhất bằng $0.0$ và worker có thể trả về ngay. Nếu không có điểm trùng, worker sử dụng hash grid: chia mặt phẳng thành các ô theo kích thước lưới hiện tại, mỗi điểm mới chỉ so sánh với các điểm trong ô của nó và các ô lân cận. Khi tìm được khoảng cách tốt hơn, kích thước lưới được cập nhật để giảm số ứng viên cần so sánh về sau.
+
+Tương tác giữa các tiến trình diễn ra ở mức test case. Worker trả về cặp \func{(case\_idx, ans)}; tiến trình chính dùng \func{case\_idx} để đặt kết quả vào đúng vị trí ban đầu. Cách này cho phép dùng \func{imap\_unordered}: worker nào xong trước có thể trả kết quả trước mà không làm sai thứ tự output.
+
+\subsection{Tiềm năng tăng tốc và ví dụ minh họa}
+Tiềm năng tăng tốc phụ thuộc mạnh vào số lượng test case $Q$ và phân bố kích thước từng case. Khi có nhiều case độc lập, tiến trình chính có thể giao các case khác nhau cho nhiều worker, nhờ đó thời gian tổng gần với thời gian xử lý của nhóm case nặng nhất thay vì tổng thời gian của tất cả case. Việc sắp case lớn trước giúp giảm nguy cơ một case lớn còn lại ở cuối làm toàn bộ chương trình phải chờ.
+
+Ví dụ với $Q=2$, case 1 gồm các điểm $(4,0)$, $(8,9)$, $(0,4)$, $(2,0)$ và case 2 gồm $(2,0)$, $(1,6)$, $(3,9)$, $(3,10)$. Hai worker có thể xử lý hai case này độc lập. Worker của case 1 tìm được khoảng cách nhỏ nhất $2.0$ giữa $(4,0)$ và $(2,0)$; worker của case 2 tìm được khoảng cách nhỏ nhất $1.0$ giữa $(3,9)$ và $(3,10)$. Tiến trình chính đặt hai kết quả theo đúng chỉ số case và trả về \func{[2.0, 1.0]}.
+
 \subsection{Dữ liệu, phụ thuộc và chi phí}
 \begin{itemize}
   \item \textbf{Phân phối dữ liệu}: danh sách token và range từng case là dữ liệu đọc chung; worker nhận chỉ số case cần xử lý.

@@ -5,30 +5,40 @@
 Input gồm khóa cần tìm $K$ và một mảng số nguyên $A$ có thể chứa tối đa $10^6$ phần tử. Chương trình cần trả về chỉ số nhỏ nhất $i$ sao cho $A[i] = K$; nếu không tồn tại, kết quả là $-1$. Đề bài yêu cầu tự chia mảng và không sử dụng hàm tìm kiếm dựng sẵn.
 \end{requirementbox}
 
-\subsection{Hiện trạng mã nguồn}
-Tại thời điểm lập báo cáo, \codepath{challenge/challenge5.py} chưa có nội dung hiện thực. Vì vậy phần này được trình bày như một thiết kế đề xuất dựa trên yêu cầu của đề bài. Khi nhóm bổ sung mã nguồn cuối cùng cho challenge này, cần cập nhật lại mô tả hiện thực để phản ánh chính xác phiên bản đã nộp.
+\subsection{Hiện thực đã xây dựng}
+Trong \codepath{challenge/challenge5.py}, chương trình đọc toàn bộ input ở dạng byte. Token đầu tiên được xem là khóa cần tìm $K$; phần dữ liệu còn lại biểu diễn mảng $A$ dưới dạng các token số nguyên phân tách bởi khoảng trắng hoặc xuống dòng. Thay vì chuyển toàn bộ mảng thành danh sách số nguyên ngay từ đầu, mã nguồn tìm trực tiếp vị trí xuất hiện của token khóa trên buffer byte, sau đó quy đổi vị trí byte này về chỉ số phần tử trong mảng.
 
-\subsection{Thiết kế đề xuất}
-Chiến lược song song hóa phù hợp là chia mảng $A$ thành các đoạn chỉ số liên tiếp. Mỗi worker quét tuyến tính đoạn được giao và trả về vị trí đầu tiên tìm thấy $K$ trong đoạn đó. Tiến trình chính lấy chỉ số nhỏ nhất trong các kết quả hợp lệ.
+Hàm \func{parallel\_find} xử lý riêng phần tử đầu tiên của mảng để bắt trường hợp $K$ xuất hiện ngay tại đầu vùng dữ liệu. Nếu chưa tìm thấy, vùng dữ liệu còn lại được chia thành nhiều khoảng byte liên tiếp bằng hàm \func{make\_ranges}. Mỗi worker chạy \func{worker\_find}, tìm các vị trí có dạng token độc lập, tức là khóa phải đứng sau dấu cách hoặc ký tự xuống dòng và phía sau khóa phải là biên token hợp lệ. Kết quả worker trả về là offset byte nhỏ nhất trong khoảng được giao, hoặc $-1$ nếu không tìm thấy.
 
-Cách tiếp cận này bảo đảm tính đúng đắn vì mọi đoạn tạo thành một phân hoạch của mảng ban đầu. Nếu một worker trả về chỉ số trong đoạn của nó, đó là vị trí đầu tiên của $K$ trong đoạn đó. Lấy giá trị nhỏ nhất trên toàn bộ các đoạn sẽ cho ra vị trí đầu tiên của $K$ trong toàn mảng.
+\subsection{Phân tích song song hóa}
+Đơn vị công việc song song là các khoảng byte liên tiếp trong vùng dữ liệu của mảng. Các worker chỉ đọc buffer dùng chung và không ghi vào dữ liệu đầu vào, do đó không phát sinh xung đột ghi. Sau khi các worker hoàn tất, tiến trình chính chọn offset nhỏ nhất trong các kết quả hợp lệ. Offset này tương ứng với lần xuất hiện đầu tiên của khóa trong toàn bộ mảng.
+
+Do việc chia theo byte có thể cắt qua giữa một token, mỗi worker không chỉ kiểm tra chuỗi khóa mà còn kiểm tra biên token trước và sau khóa. Cách kiểm tra này ngăn trường hợp khóa $20$ bị nhận nhầm bên trong token $120$ hoặc $200$. Sau bước reduce, hàm \func{index\_from\_offset} đếm số token đứng trước offset tìm được để trả về chỉ số mảng theo quy ước bắt đầu từ 0.
 
 \subsection{Thiết kế thuật toán song song}
-\begin{lstlisting}[caption={Pseudocode đề xuất cho Challenge 5}]
+\begin{lstlisting}[caption={Pseudocode song song cho Challenge 5}]
 MAIN(path):
-    K, A = parse_input(path)
-    ranges = split_index_ranges(len(A))
+    data = read_all_bytes(path)
+    key = first_token(data)
+    arr_start = first_token_after_key(data)
 
-    candidates = pool.map(search_range, ranges)
-    valid = [idx for idx in candidates if idx != -1]
-    if valid is empty:
+    pos = parallel_find(data, arr_start, key)
+    if pos == -1:
         return -1
-    return min(valid)
+    return index_from_offset(data, arr_start, pos)
 
-search_range(start, end):
-    for i in range(start, end):
-        if A[i] == K:
-            return i
+parallel_find(data, arr_start, key):
+    if first_array_token_equals_key(data, arr_start, key):
+        return arr_start
+
+    ranges = split_byte_ranges(arr_start + 1, len(data))
+    offsets = pool.map(worker_find, ranges)
+    return minimum_valid_offset(offsets)
+
+worker_find(lo, hi):
+    for each occurrence of key pattern in data[lo:hi]:
+        if occurrence is a complete token:
+            return occurrence_offset
     return -1
 \end{lstlisting}
 
@@ -37,11 +47,11 @@ search_range(start, end):
 \centering
 \begin{tikzpicture}[node distance=0.8cm and 1.0cm, scale=0.82, transform shape]
 \node[flowstart] (start) {Bắt đầu};
-\node[flowprocess, below=of start] (parse) {Đọc khóa $K$ và mảng $A$};
-\node[flowprocess, below=of parse] (split) {Chia mảng thành các đoạn chỉ số};
-\node[flowprocess, below=of split] (worker) {Worker quét đoạn và trả về vị trí đầu tiên};
+\node[flowprocess, below=of start] (parse) {Đọc input byte và tách khóa $K$};
+\node[flowprocess, below=of parse] (split) {Chia vùng mảng thành các khoảng byte};
+\node[flowprocess, below=of split] (worker) {Worker tìm token khóa và trả về offset nhỏ nhất};
 \node[flowdecision, below=of worker] (found) {Có kết quả hợp lệ?};
-\node[flowmerge, below left=1.1cm and 1.8cm of found] (min) {Lấy chỉ số nhỏ nhất};
+\node[flowmerge, below left=1.1cm and 1.8cm of found] (min) {Lấy offset nhỏ nhất và đổi sang chỉ số};
 \node[flowmerge, below right=1.1cm and 1.8cm of found] (minus) {Gán kết quả $-1$};
 \node[flowstart, below=2.7cm of found] (end) {Trả về kết quả};
 \draw[flowarrow] (start) -- (parse);
@@ -53,20 +63,30 @@ search_range(start, end):
 \draw[flowarrow] (min) |- (end);
 \draw[flowarrow] (minus) |- (end);
 \end{tikzpicture}
-\caption{Luồng xử lý đề xuất cho Challenge 5}
+\caption{Luồng xử lý song song của Challenge 5}
 \label{fig:challenge5-flow}
 \end{figure}
 
+\subsection{Giải thích vai trò các bước}
+Tiến trình chính thực hiện ba bước chuẩn bị: đọc buffer byte, tách token khóa $K$ và xác định vị trí bắt đầu của mảng. Sau đó, chương trình kiểm tra riêng token đầu tiên trong mảng. Bước này cần thiết vì các worker tìm khóa thông qua mẫu có ký tự phân tách đứng trước, trong khi phần tử đầu tiên của mảng không nhất thiết có ký tự phân tách trước nó trong vùng tìm kiếm.
+
+Khi cần chạy song song, tiến trình chính chia vùng mảng thành các khoảng byte và gán cho worker. Mỗi worker tìm các mẫu \func{space + key} hoặc \func{newline + key}, rồi kiểm tra biên bên phải để chắc chắn khóa là một token hoàn chỉnh. Worker chỉ trả về offset byte nhỏ nhất trong khoảng của mình. Tiến trình chính chọn offset nhỏ nhất trên toàn bộ kết quả, vì offset nhỏ hơn tương ứng với token xuất hiện sớm hơn trong input. Cuối cùng, \func{index\_from\_offset} đếm số token đứng trước offset này để đổi từ vị trí byte sang chỉ số mảng.
+
+\subsection{Tiềm năng tăng tốc và ví dụ minh họa}
+Tìm kiếm tuyến tính có độ phức tạp \bigO{N}. Phiên bản song song có thể giảm thời gian quét khi mảng rất lớn và khóa xuất hiện muộn hoặc không xuất hiện, vì nhiều đoạn dữ liệu được kiểm tra đồng thời. Nếu khóa nằm ngay đầu mảng, phiên bản hiện tại trả về sớm trước khi tạo pool, nhờ đó tránh overhead không cần thiết. Nếu khóa nằm gần giữa hoặc cuối mảng, speedup phụ thuộc vào kích thước input, số worker và chi phí quét byte.
+
+Ví dụ với input có khóa $K=20$ và mảng \func{10 25 5 30 15 40 20 5 35 45 0}. Sau khi tách khóa, vùng mảng được chia cho các worker. Worker nào phụ trách đoạn chứa token \func{20} sẽ trả về offset của token đó. Các worker khác trả về $-1$. Tiến trình chính chọn offset hợp lệ duy nhất, sau đó đếm các token đứng trước nó: \func{10, 25, 5, 30, 15, 40}. Vì có 6 token trước \func{20}, kết quả trả về là chỉ số $6$.
+
 \subsection{Dữ liệu, phụ thuộc và chi phí}
 \begin{itemize}
-  \item \textbf{Phân phối dữ liệu}: mảng $A$ có thể được lưu trong biến toàn cục; worker chỉ nhận khoảng chỉ số cần quét.
-  \item \textbf{Phụ thuộc dữ liệu}: các đoạn tìm kiếm độc lập; bước reduce chỉ chọn chỉ số nhỏ nhất.
-  \item \textbf{Cân bằng tải}: nếu không có dừng sớm toàn cục, mỗi worker quét số phần tử gần bằng nhau.
-  \item \textbf{Chi phí giao tiếp}: thấp vì mỗi worker chỉ trả về một số nguyên.
+  \item \textbf{Phân phối dữ liệu}: buffer input được lưu trong biến toàn cục; worker chỉ nhận cặp chỉ số byte \func{(lo, hi)}.
+  \item \textbf{Phụ thuộc dữ liệu}: các khoảng tìm kiếm độc lập; bước reduce chỉ chọn offset nhỏ nhất trong các kết quả hợp lệ.
+  \item \textbf{Cân bằng tải}: chia theo số byte giúp kích thước mỗi phần việc gần bằng nhau, nhưng thời gian thực tế còn phụ thuộc vào mật độ xuất hiện của khóa và độ dài token.
+  \item \textbf{Chi phí giao tiếp}: thấp, vì mỗi worker chỉ trả về một offset byte hoặc $-1$.
 \end{itemize}
 
 \subsection{Đánh giá hiệu năng}
 \benchmarktable{Challenge 5}
 
 \paragraph{Nhận xét.}
-\placeholder{Sau khi có mã nguồn cuối, điền số liệu cho các trường hợp K xuất hiện đầu mảng, giữa mảng, cuối mảng và không xuất hiện. Nếu có cơ chế dừng sớm, cần giải thích cách vẫn bảo đảm chỉ số nhỏ nhất.}
+\placeholder{Điền số liệu cho các trường hợp K xuất hiện đầu mảng, giữa mảng, cuối mảng và không xuất hiện. Cần giải thích vì sao việc chọn offset nhỏ nhất bảo đảm trả về chỉ số đầu tiên, đồng thời phân tích chi phí quy đổi offset về chỉ số mảng.}

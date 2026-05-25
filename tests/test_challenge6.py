@@ -35,6 +35,13 @@ def _brute(points):
     return round(math.sqrt(best), 4)
 
 
+def _tokens(points):
+    toks = []
+    for x, y in points:
+        toks.extend((x, y))
+    return toks
+
+
 class Challenge6Tests(unittest.TestCase):
     def test_main_matches_statement_sample(self):
         raw = b"""2
@@ -86,6 +93,15 @@ class Challenge6Tests(unittest.TestCase):
                 packed = {_pack(x, y) for x, y in points}
                 self.assertEqual(challenge6._closest_pair_core(packed), _brute(points))
 
+    def test_core_accepts_prefix_override(self):
+        points = [(0, 0), (10, 10), (11, 10), (100, 100), (200, 200)]
+        packed = {_pack(x, y) for x, y in points}
+        self.assertEqual(challenge6._round_best_sq(challenge6._closest_pair_sq_core(packed, 4)), 1.0)
+
+    def test_case_prefix_keeps_large_cases_on_default(self):
+        self.assertEqual(challenge6._case_prefix(1_000), 64)
+        self.assertEqual(challenge6._case_prefix(300_000), 128)
+
     def test_parallel_x_finds_pair_across_partition_boundary(self):
         points = [(-1000, 0), (0, 500), (1, 500), (1000, 0)]
         packed = {_pack(x, y) for x, y in points}
@@ -96,6 +112,34 @@ class Challenge6Tests(unittest.TestCase):
         grid_like = {_pack(i % 64, i // 64) for i in range(4096)}
         self.assertFalse(challenge6._looks_axis_structured(random_like))
         self.assertTrue(challenge6._looks_axis_structured(grid_like))
+
+    def test_rotate_scan_matches_bruteforce_and_rejects_grid_shape(self):
+        points = [(0, 0), (7, 11), (5, 5), (9, 5), (100, 100)]
+        packed = {_pack(x, y) for x, y in points}
+        grid_like = {_pack(i % 64, i // 64) for i in range(4096)}
+        self.assertEqual(challenge6._closest_pair_rotate_scan(packed), _brute(points))
+        self.assertFalse(challenge6._rotate_scan_is_safe(grid_like))
+
+    def test_raw_rotate_scan_matches_bruteforce_and_guards_shapes(self):
+        points = [(0, 0), (7, 11), (5, 5), (9, 5), (100, 100)]
+        self.assertEqual(
+            challenge6._closest_pair_rotate_scan_raw(_tokens(points), 0, len(points)),
+            _brute(points),
+        )
+
+        diag = _tokens((i, i) for i in range(20_000))
+        line = _tokens((i, 0) for i in range(20_000))
+        perp = []
+        for i in range(20_000):
+            perp.extend((19_362 * i, 6_767 * i))
+        mixed_tail = _tokens((i, i) for i in range(10_000)) + _tokens(
+            (19_362 * (i + 1), 6_767 * (i + 1)) for i in range(10_000)
+        )
+
+        self.assertTrue(challenge6._rotate_scan_raw_is_safe(diag, 0, 20_000))
+        self.assertFalse(challenge6._rotate_scan_raw_is_safe(line, 0, 20_000))
+        self.assertFalse(challenge6._rotate_scan_raw_is_safe(perp, 0, 20_000))
+        self.assertFalse(challenge6._rotate_scan_raw_is_safe(mixed_tail, 0, 20_000))
 
     def test_parallel_plan_keeps_small_two_case_inputs_serial(self):
         ranges = [(1, 20_000), (40_002, 20_000)]

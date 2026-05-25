@@ -56,6 +56,16 @@ MAIN(path):
 \label{fig:challenge2-flow}
 \end{figure}
 
+\subsection{Giải thích vai trò các bước}
+Tiến trình chính thực hiện các bước có tính toàn cục: đọc $N$ và modulo $Q$, lựa chọn cách tính Fibonacci, khởi tạo bảng window nếu số lượng truy vấn đủ lớn và cấp phát \func{RawArray} cho output. Các bước này phải hoàn tất trước khi tạo worker vì mọi worker đều phụ thuộc vào cùng giá trị modulo và cùng cấu trúc tra cứu.
+
+Sau đó, vùng chứa các truy vấn được chia thành nhiều chunk. Mỗi chunk đi kèm vị trí bắt đầu trong output, nhờ đó worker có thể ghi kết quả của truy vấn thứ $j$ trong chunk vào đúng ô \func{out\_start + j}. Cách ghi này thể hiện tương tác giữa các tiến trình: worker không cần gửi lại toàn bộ danh sách kết quả, cũng không cần khóa đồng bộ, vì mỗi worker được cấp một vùng ghi không giao nhau.
+
+\subsection{Tiềm năng tăng tốc và ví dụ minh họa}
+Bài toán có tiềm năng tăng tốc tốt khi $N$ lớn, vì các truy vấn Fibonacci độc lập. Nếu mỗi truy vấn được tính bằng fast doubling với chi phí \bigO{\log A_i}, tổng khối lượng tính toán đủ lớn có thể được chia cho nhiều worker. Bảng window còn giúp giảm chi phí lặp lại khi nhiều truy vấn có chỉ số lớn và cùng modulo.
+
+Ví dụ, với $N=6$ truy vấn và 3 worker, có thể chia thành ba chunk: worker 1 xử lý $A_0,A_1$, worker 2 xử lý $A_2,A_3$, worker 3 xử lý $A_4,A_5$. Nếu input là $3,4,5,6,7,8$ với $Q=10^9$, các worker lần lượt ghi các kết quả $2,3$, $5,8$, $13,21$ vào các vùng đã định sẵn. Khi tiến trình chính đọc lại \func{RawArray}, thứ tự output vẫn là thứ tự ban đầu của input.
+
 \subsection{Dữ liệu, phụ thuộc và chi phí}
 \begin{itemize}
   \item \textbf{Phân phối dữ liệu}: input byte và bảng Fibonacci là dữ liệu đọc chung; output là mảng chia sẻ ghi theo vùng không giao nhau.

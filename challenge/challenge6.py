@@ -5,12 +5,18 @@ from library4students import *
 _G_TOKENS = None
 _G_RANGES = None
 _G_SORTED_PTS = None
+_G_WORKER_PREFIX = 128
 
 _OFFSET = 2000000000
 _MASK = (1 << 32) - 1
 _SHIFT = 1 << 32
 
 _PREFIX = 128
+_SMALL_PREFIX = 64
+_STRUCTURED_PREFIX = 384
+_ROT_ANGLE = 1.23456789
+_ROT_C = math.cos(_ROT_ANGLE)
+_ROT_S = math.sin(_ROT_ANGLE)
 
 _NEIGH_DELTA = (
     -_SHIFT - 1, -_SHIFT, -_SHIFT + 1,
@@ -25,7 +31,7 @@ def _round_best_sq(best_sq):
     return round(math.sqrt(best_sq), 4)
 
 
-def _closest_pair_sq_core(pts_source):
+def _closest_pair_sq_core(pts_source, prefix):
     n = len(pts_source)
 
     if n < 2:
@@ -38,7 +44,7 @@ def _closest_pair_sq_core(pts_source):
 
     pts = list(pts_source)
 
-    prefix_len = _PREFIX if n >= _PREFIX else n
+    prefix_len = prefix if n >= prefix else n
 
     seed = 123456789
     for i in range(prefix_len):
@@ -161,8 +167,16 @@ def _closest_pair_sq_core(pts_source):
     return best_sq
 
 
-def _closest_pair_core(pts_set):
-    return _round_best_sq(_closest_pair_sq_core(pts_set))
+def _case_prefix(n):
+    if n <= 1500:
+        return _SMALL_PREFIX
+    return _PREFIX
+
+
+def _closest_pair_core(pts_set, prefix=None):
+    if prefix is None:
+        prefix = _PREFIX
+    return _round_best_sq(_closest_pair_sq_core(pts_set, prefix))
 
 
 def _looks_axis_structured(pts_set):
@@ -187,13 +201,210 @@ def _looks_axis_structured(pts_set):
     return duplicate_x >= count // 8 or duplicate_y >= count // 8
 
 
+def _rotate_scan_is_safe(pts_set):
+    n = len(pts_set)
+    if n < 20000:
+        return False
+
+    MASK = _MASK
+    OFFSET = _OFFSET
+    C = _ROT_C
+    S = _ROT_S
+
+    sample_limit = 2048
+    sample = []
+    xs = set()
+    ys = set()
+
+    for p in pts_set:
+        x = (p >> 32) - OFFSET
+        y = (p & MASK) - OFFSET
+        sample.append(complex(x * C - y * S, x * S + y * C))
+        xs.add(x)
+        ys.add(y)
+        if len(sample) >= sample_limit:
+            break
+
+    count = len(sample)
+    if count < 512:
+        return False
+
+    duplicate_x = count - len(xs)
+    duplicate_y = count - len(ys)
+    if duplicate_x >= count // 8 or duplicate_y >= count // 8:
+        return False
+
+    sample.sort(key=lambda p: p.real)
+
+    best = float("inf")
+    for i in range(count - 1):
+        pi = sample[i]
+        limit = i + 9
+        if limit > count:
+            limit = count
+        for j in range(i + 1, limit):
+            d = abs(sample[j] - pi)
+            if d < best:
+                best = d
+
+    if best == float("inf"):
+        return False
+
+    total_candidates = 0
+    max_total = count * 5
+    for i in range(count - 1):
+        px = sample[i].real
+        for j in range(i + 1, count):
+            if sample[j].real - px >= best:
+                break
+            total_candidates += 1
+            if total_candidates > max_total:
+                return False
+
+    return True
+
+
+def _rotate_scan_raw_is_safe(toks, start, n):
+    if n < 20000:
+        return False
+
+    C = _ROT_C
+    S = _ROT_S
+
+    sample_limit = 2048
+    sample_count = sample_limit if n >= sample_limit else n
+
+    sample = []
+    xs = set()
+    ys = set()
+
+    for i in range(sample_count):
+        k = start + 2 * ((i * n) // sample_count)
+        x = toks[k]
+        y = toks[k + 1]
+        sample.append(complex(x * C - y * S, x * S + y * C))
+        xs.add(x)
+        ys.add(y)
+
+    count = len(sample)
+    if count < 512:
+        return False
+
+    duplicate_x = count - len(xs)
+    duplicate_y = count - len(ys)
+    if duplicate_x >= count // 8 or duplicate_y >= count // 8:
+        return False
+
+    sample.sort(key=lambda p: p.real)
+
+    best = float("inf")
+    for i in range(count - 1):
+        pi = sample[i]
+        limit = i + 9
+        if limit > count:
+            limit = count
+        for j in range(i + 1, limit):
+            d = abs(sample[j] - pi)
+            if d < best:
+                best = d
+
+    if best == float("inf"):
+        return False
+
+    total_candidates = 0
+    max_total = count * 5
+    for i in range(count - 1):
+        px = sample[i].real
+        for j in range(i + 1, count):
+            if sample[j].real - px >= best:
+                break
+            total_candidates += 1
+            if total_candidates > max_total:
+                return False
+
+    return True
+
+
+def _closest_pair_rotate_scan(pts_set):
+    n = len(pts_set)
+    if n < 2:
+        return 0.0
+
+    MASK = _MASK
+    OFFSET = _OFFSET
+    C = _ROT_C
+    S = _ROT_S
+
+    pts = [
+        complex(
+            ((p >> 32) - OFFSET) * C - ((p & MASK) - OFFSET) * S,
+            ((p >> 32) - OFFSET) * S + ((p & MASK) - OFFSET) * C,
+        )
+        for p in pts_set
+    ]
+
+    pts.sort(key=lambda p: p.real)
+
+    best = float("inf")
+    for i in range(n):
+        pi = pts[i]
+        px = pi.real
+
+        for j in range(i + 1, n):
+            pj = pts[j]
+            if pj.real - px >= best:
+                break
+
+            d = abs(pj - pi)
+            if d < best:
+                if d <= 1e-7:
+                    return 0.0
+                best = d
+
+    return round(best, 4)
+
+
+def _closest_pair_rotate_scan_raw(toks, start, n):
+    if n < 2:
+        return 0.0
+
+    C = _ROT_C
+    S = _ROT_S
+    end = start + 2 * n
+
+    pts = [
+        complex(toks[k] * C - toks[k + 1] * S, toks[k] * S + toks[k + 1] * C)
+        for k in range(start, end, 2)
+    ]
+
+    pts.sort(key=lambda p: p.real)
+
+    best = float("inf")
+    for i in range(n):
+        pi = pts[i]
+        px = pi.real
+
+        for j in range(i + 1, n):
+            pj = pts[j]
+            if pj.real - px >= best:
+                break
+
+            d = abs(pj - pi)
+            if d < best:
+                if d <= 1e-7:
+                    return 0.0
+                best = d
+
+    return round(best, 4)
+
+
 def _closest_pair_range_worker(rng):
-    global _G_SORTED_PTS
+    global _G_SORTED_PTS, _G_WORKER_PREFIX
 
     lo, hi = rng
     if hi - lo < 2:
         return 10 ** 40
-    return _closest_pair_sq_core(_G_SORTED_PTS[lo:hi])
+    return _closest_pair_sq_core(_G_SORTED_PTS[lo:hi], _G_WORKER_PREFIX)
 
 
 def _strip_best_sq(strip, best_sq):
@@ -258,11 +469,13 @@ def _closest_pair_parallel_x(pts_set, workers):
         return _closest_pair_core(pts_set)
 
     _G_SORTED_PTS = pts
+    _G_WORKER_PREFIX = _STRUCTURED_PREFIX
     try:
         with ctx.Pool(processes=len(ranges)) as pool:
             best_sq = min(pool.map(_closest_pair_range_worker, ranges))
     finally:
         _G_SORTED_PTS = None
+        _G_WORKER_PREFIX = _PREFIX
 
     if best_sq <= 1:
         return float(best_sq)
@@ -343,6 +556,9 @@ def _solve_one_raw(case_idx, use_inner_parallel=False):
     OFFSET = _OFFSET
     end = start + 2 * N
 
+    if _rotate_scan_raw_is_safe(toks, start, N):
+        return case_idx, _closest_pair_rotate_scan_raw(toks, start, N)
+
     pts_set = {
         ((toks[k] + OFFSET) << 32) | (toks[k + 1] + OFFSET)
         for k in range(start, end, 2)
@@ -354,7 +570,7 @@ def _solve_one_raw(case_idx, use_inner_parallel=False):
     if use_inner_parallel and _looks_axis_structured(pts_set):
         return case_idx, _closest_pair_parallel_x(pts_set, multiprocessing.cpu_count())
 
-    return case_idx, _closest_pair_core(pts_set)
+    return case_idx, _closest_pair_core(pts_set, _case_prefix(N))
 
 
 def MAIN(input_file_path):

@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.12) (preloaded format=xelatex 2026.5.23)  25 MAY 2026 19:53
+This is XeTeX, Version 3.141592653-2.6-0.999997 (MiKTeX 25.12) (preloaded format=xelatex 2026.5.23)  25 MAY 2026 19:37
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -950,8 +950,8 @@ Package: lastpagemodern 2025-08-14 v2.1h Refers to last page's name (HMM; JPG)
 (C:\Users\THANG\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
 File: lstlang1.sty 2025/11/14 1.11b listings language file
 )
-(main.aux)
-\openout1 = `main.aux'.
+(main_verify.aux)
+\openout1 = `main_verify.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 131.
 LaTeX Font Info:    ... okay on input line 131.
@@ -1079,9 +1079,9 @@ Package caption Info: float package is loaded.
 Package caption Info: hyperref package is loaded.
 Package caption Info: End \AtBeginDocument code.
 Package hyperref Info: Link coloring OFF on input line 131.
-(main.out) (main.out)
+(main_verify.out) (main_verify.out)
 \@outlinefile=\write4
-\openout4 = `main.out'.
+\openout4 = `main_verify.out'.
 
  (sections/00_frontmatter.tex
 LaTeX Font Info:    Trying to load font information for U+msa on input line 13.
@@ -1098,44 +1098,44 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 [1
 
-] [1]) (main.toc [2])
+] [1]) (main_verify.toc [2])
 \tf@toc=\write5
-\openout5 = `main.toc'.
+\openout5 = `main_verify.toc'.
 
- [3] [4] (main.lot)
+ [3] [4] (main_verify.lot)
 \tf@lot=\write6
-\openout6 = `main.lot'.
+\openout6 = `main_verify.lot'.
 
- (main.lof)
+ (main_verify.lof)
 \tf@lof=\write7
-\openout7 = `main.lof'.
+\openout7 = `main_verify.lof'.
 
- [5]
-(sections/01_overview.tex [6]) (sections/challenge1.tex [7] [8]
+
+[5] (sections/01_overview.tex [6]) (sections/challenge1.tex [7] [8]
 Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
 nput line 19.
- [9] [10])
-(sections/challenge2.tex [11] [12] [13]) (sections/challenge3.tex [14] [15]
-[16] [17]) (sections/challenge4.tex [18] [19] [20]) (sections/challenge5.tex
-[21] [22] [23] [24]) (sections/challenge6.tex [25] [26] [27] [28])
-(sections/08_conclusion.tex [29]) (sections/09_appendix.tex [30]) [31] [32]
-
+ [9]
+[10]) (sections/challenge2.tex [11] [12] [13]) (sections/challenge3.tex
+[14] [15] [16] [17]) (sections/challenge4.tex [18] [19] [20])
+(sections/challenge5.tex [21] [22] [23] [24]) (sections/challenge6.tex [25]
+[26] [27] [28]) (sections/08_conclusion.tex [29]) (sections/09_appendix.tex
+[30]) [31] [32] 
 enddocument/afterlastpage (AED): lastpage setting LastPage.
-(main.aux)
+(main_verify.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2025-12-24>
  ***********
-Package rerunfilecheck Info: File `main.out' has not changed.
+Package rerunfilecheck Info: File `main_verify.out' has not changed.
 (rerunfilecheck)             Checksum: E5267E48BD3E203C06217F80895A2A64;14468.
  ) 
 Here is how much of TeX's memory you used:
  28772 strings out of 402987
- 573273 string characters out of 5448524
- 1314876 words of memory out of 5000000
+ 573497 string characters out of 5448524
+ 1314890 words of memory out of 5000000
  56990 multiletter control sequences out of 15000+600000
  634857 words of font info for 121 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  84i,12n,94p,619b,1842s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on main.pdf (33 pages).
+Output written on main_verify.pdf (33 pages).

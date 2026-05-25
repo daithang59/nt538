@@ -2,6 +2,7 @@
 
 \usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=3cm,right=2cm]{geometry}
 \usepackage{fontspec}
+\usepackage{setspace}
 \usepackage{polyglossia}
 \setdefaultlanguage{vietnamese}
 \IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
@@ -24,7 +25,14 @@
   flowprocess/.style={rectangle, rounded corners=2pt, draw=NavyBlue, fill=blue!3, thick, align=center, text width=4.1cm, minimum height=0.9cm},
   flowdecision/.style={diamond, aspect=2, draw=Orange, fill=orange!8, thick, align=center, text width=3.1cm, inner sep=1pt},
   flowmerge/.style={rectangle, rounded corners=2pt, draw=ForestGreen, fill=green!5, thick, align=center, text width=4.1cm, minimum height=0.9cm},
-  flowarrow/.style={-{Latex[length=2.5mm]}, thick}
+  flowarrow/.style={-{Latex[length=2.5mm]}, thick},
+  rolemaster/.style={rectangle, rounded corners=3pt, draw=NavyBlue, fill=blue!7, thick, align=center, text width=3.3cm, minimum height=1.0cm},
+  roleworker/.style={rectangle, rounded corners=3pt, draw=ForestGreen, fill=green!7, thick, align=center, text width=2.9cm, minimum height=0.95cm},
+  roledata/.style={rectangle, rounded corners=2pt, draw=black!45, fill=black!4, align=center, text width=2.75cm, minimum height=0.78cm},
+  rolereduce/.style={circle, draw=Orange, fill=orange!10, thick, align=center, minimum size=1.25cm},
+  roleoutput/.style={rectangle, rounded corners=3pt, draw=Purple, fill=purple!7, thick, align=center, text width=3.1cm, minimum height=0.95cm},
+  rolearrow/.style={-{Latex[length=2.2mm]}, thick},
+  rolehint/.style={font=\footnotesize, align=center, text=black!70}
 }
 \usepackage{listings}
 \usepackage{caption}
@@ -125,6 +133,7 @@ Kích thước & Số worker & $T_{\mathrm{seq}}$ (s) & $T_{\mathrm{par}}$ (s) &
 \setlist[itemize]{topsep=4pt,itemsep=2pt}
 \setlist[enumerate]{topsep=4pt,itemsep=2pt}
 \renewcommand{\arraystretch}{1.2}
+\setstretch{1.3}
 
 \begin{document}
 

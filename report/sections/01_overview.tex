@@ -11,8 +11,9 @@ Theo yêu cầu của đề bài, mỗi challenge trong báo cáo được trìn
 \begin{itemize}
   \item \textbf{Mô tả bài toán}: tóm tắt dữ liệu vào, dữ liệu ra và điều kiện cần thỏa mãn.
   \item \textbf{Phân tích song song hóa}: xác định các đơn vị công việc độc lập, phương án chia việc, cách phân phối và truy cập dữ liệu.
-  \item \textbf{Thiết kế thuật toán}: trình bày luồng xử lý bằng mô tả, pseudocode và lưu đồ minh họa.
+  \item \textbf{Thiết kế thuật toán}: trình bày luồng xử lý bằng mô tả, pseudocode và lưu đồ minh họa; đồng thời giải thích vai trò của từng bước và cách các tiến trình phối hợp.
   \item \textbf{Đánh giá hiệu năng}: so sánh thời gian thực thi giữa phiên bản tuần tự tham chiếu và phiên bản song song, từ đó phân tích speedup và efficiency.
+  \item \textbf{Ví dụ minh họa}: đưa ví dụ nhỏ để làm rõ cách thuật toán xử lý dữ liệu và tạo kết quả.
 \end{itemize}
 
 \subsection{Môi trường thực nghiệm}
@@ -62,7 +63,7 @@ Challenge & File & Đặc điểm hiện thực chính \\
 2 & \codepath{challenge/challenge2.py} & Xử lý độc lập từng truy vấn Fibonacci modulo; kết hợp fast doubling, bảng window và mảng chia sẻ \func{RawArray}. \\
 3 & \codepath{challenge/challenge3.py} & Chia phép nhân ma trận theo cụm dòng; sử dụng ma trận $B$ đã chuyển vị để tăng tính liên tục khi truy cập dữ liệu. \\
 4 & \codepath{challenge/challenge4.py} & Tự hiện thực merge sort; sắp xếp song song các chunk ban đầu rồi merge kết quả theo thứ tự. \\
-5 & \codepath{challenge/challenge5.py} & Mã nguồn hiện chưa có nội dung; phần báo cáo tương ứng được trình bày theo thiết kế đề xuất từ yêu cầu bài toán. \\
+5 & \codepath{challenge/challenge5.py} & Tìm khóa trực tiếp trên buffer byte; chia vùng dữ liệu thành các khoảng byte, worker trả về offset ứng viên và tiến trình chính quy đổi offset nhỏ nhất về chỉ số mảng. \\
 6 & \codepath{challenge/challenge6.py} & Xử lý độc lập từng bộ điểm 2D; dùng mã hóa điểm và hash grid để tìm khoảng cách gần nhất. \\
 \bottomrule
 \end{tabularx}
