@@ -3,10 +3,10 @@
 \contentsline {subsection}{\numberline {1.1}Mục tiêu báo cáo}{5}{subsection.1.1}%
 \contentsline {subsection}{\numberline {1.2}Phạm vi nội dung}{5}{subsection.1.2}%
 \contentsline {subsection}{\numberline {1.3}Môi trường thực nghiệm}{5}{subsection.1.3}%
-\contentsline {subsection}{\numberline {1.4}Phương pháp đo hiệu năng}{5}{subsection.1.4}%
+\contentsline {subsection}{\numberline {1.4}Phương pháp đo hiệu năng}{6}{subsection.1.4}%
 \contentsline {subsection}{\numberline {1.5}Tóm tắt mã nguồn hiện có}{6}{subsection.1.5}%
 \contentsline {section}{\numberline {2}Challenge 1: Tính tổng mảng số nguyên}{6}{section.2}%
-\contentsline {subsection}{\numberline {2.1}Hiện thực đã xây dựng}{6}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.1}Hiện thực đã xây dựng}{7}{subsection.2.1}%
 \contentsline {subsection}{\numberline {2.2}Phân tích song song hóa}{7}{subsection.2.2}%
 \contentsline {subsection}{\numberline {2.3}Thiết kế thuật toán song song}{7}{subsection.2.3}%
 \contentsline {subsection}{\numberline {2.4}Lưu đồ thuật toán}{8}{subsection.2.4}%

@@ -4,7 +4,7 @@
 \subsection{Mục tiêu báo cáo}
 Bài thực hành yêu cầu xây dựng các thuật toán xử lý song song cho sáu bài toán có kích thước dữ liệu lớn. Trọng tâm của báo cáo không chỉ là mô tả kết quả hiện thực, mà còn làm rõ cơ sở thiết kế: phần việc nào có thể thực thi đồng thời, dữ liệu được phân chia như thế nào, các tiến trình phối hợp ra sao và những yếu tố nào ảnh hưởng đến hiệu năng.
 
-Các chương trình được hiện thực bằng Python theo giao diện chung \func{MAIN(input\_file\_path)}. Mỗi hàm đọc dữ liệu từ tệp đầu vào, xử lý theo yêu cầu của từng challenge và trả về kết quả đúng định dạng để hệ thống chấm có thể kiểm tra tự động.
+Các chương trình được hiện thực bằng Python theo giao diện chung là hàm \func{MAIN}. Mỗi hàm nhận đường dẫn tệp đầu vào, xử lý theo yêu cầu của từng challenge và trả về kết quả đúng định dạng để hệ thống chấm có thể kiểm tra tự động.
 
 \subsection{Phạm vi nội dung}
 Theo yêu cầu của đề bài, mỗi challenge trong báo cáo được trình bày theo cùng một cấu trúc:
@@ -22,7 +22,7 @@ Các số liệu trong báo cáo cần được đo trên cùng một môi trư�
 \centering
 \caption{Thông tin môi trường đo hiệu năng}
 \label{tab:environment}
-\begin{tabularx}{\linewidth}{@{}lX@{}}
+\begin{tabularx}{\linewidth}{@{}lY@{}}
 \toprule
 Hạng mục & Giá trị \\
 \midrule
@@ -54,7 +54,7 @@ Trong đó $T_{\mathrm{seq}}$ là thời gian của phiên bản tuần tự tha
 \centering
 \caption{Tóm tắt hiện trạng mã nguồn theo từng challenge}
 \label{tab:source-summary}
-\begin{tabularx}{\linewidth}{@{}c l X@{}}
+\begin{tabularx}{\linewidth}{@{}c l Y@{}}
 \toprule
 Challenge & File & Đặc điểm hiện thực chính \\
 \midrule

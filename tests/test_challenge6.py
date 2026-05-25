@@ -91,6 +91,12 @@ class Challenge6Tests(unittest.TestCase):
         packed = {_pack(x, y) for x, y in points}
         self.assertEqual(challenge6._closest_pair_parallel_x(packed, 2), 1.0)
 
+    def test_axis_structure_detector_separates_random_and_grid_shapes(self):
+        random_like = {_pack(i * 17, i * 31 + 7) for i in range(2048)}
+        grid_like = {_pack(i % 64, i // 64) for i in range(4096)}
+        self.assertFalse(challenge6._looks_axis_structured(random_like))
+        self.assertTrue(challenge6._looks_axis_structured(grid_like))
+
     def test_parallel_plan_keeps_small_two_case_inputs_serial(self):
         ranges = [(1, 20_000), (40_002, 20_000)]
         self.assertEqual(challenge6._choose_parallel_plan(2, 40_000, ranges, 8), (1, 1))

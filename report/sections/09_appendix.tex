@@ -2,7 +2,7 @@
 \section{Phụ lục: Mẫu đo hiệu năng}
 \label{sec:appendix-benchmark}
 
-Phần này là gợi ý cách tổ chức đo thời gian. Nhóm có thể thay bằng script thực tế đã dùng.
+Phần này trình bày một mẫu đo thời gian tham khảo. Khi hoàn thiện báo cáo, nhóm cần thay thế hoặc đối chiếu với script đo thực tế đã sử dụng để bảo đảm số liệu có thể kiểm chứng.
 
 \begin{lstlisting}[caption={Mẫu đo thời gian một hàm MAIN}]
 from time import perf_counter
@@ -26,7 +26,7 @@ Phiên bản tuần tự chỉ dùng để đo so sánh trong báo cáo, không 
 \begin{table}[H]
 \centering
 \caption{Phiên bản tuần tự tham chiếu đề xuất}
-\begin{tabular}{@{}clp{8cm}@{}}
+\begin{tabularx}{\linewidth}{@{}c l Y@{}}
 \toprule
 Challenge & Thuật toán tuần tự & Ghi chú \\
 \midrule
@@ -37,13 +37,14 @@ Challenge & Thuật toán tuần tự & Ghi chú \\
 5 & Quét tuyến tính từ trái sang phải & Trả về ngay khi gặp $K$. \\
 6 & Thuật toán cùng hash grid chạy tuần tự từng case & Hoặc chia để trị tuần tự nếu nhóm hiện thực. \\
 \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 \section{Phụ lục: Checklist nội dung theo đề}
 \label{sec:appendix-rubric}
 
-\begin{longtable}{@{}p{4cm}p{9cm}c@{}}
+\footnotesize
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{3.1cm}>{\raggedright\arraybackslash}p{7.4cm}>{\raggedright\arraybackslash}p{2.2cm}@{}}
 \caption{Đối chiếu yêu cầu đề bài với báo cáo}\\
 \toprule
 Yêu cầu & Vị trí trong báo cáo & Trạng thái \\
@@ -53,15 +54,16 @@ Yêu cầu & Vị trí trong báo cáo & Trạng thái \\
 Yêu cầu & Vị trí trong báo cáo & Trạng thái \\
 \midrule
 \endhead
-Phân tích phần song song hóa & Mỗi section challenge, tiểu mục ``Phân tích song song hóa'' & \placeholder{OK} \\
-Phương pháp chia việc & Mỗi section challenge, tiểu mục phân tích và thuật toán & \placeholder{OK} \\
-Phân phối và truy cập dữ liệu & Mỗi section challenge, tiểu mục ``Dữ liệu, phụ thuộc và chi phí'' & \placeholder{OK} \\
-Phân tích phụ thuộc dữ liệu, cân bằng tải, chi phí giao tiếp & Mỗi section challenge & \placeholder{OK} \\
-Thuật toán song song chi tiết & Pseudocode trong từng challenge & \placeholder{OK} \\
-Sơ đồ/lưu đồ nếu cần & \placeholder{Chèn hình hoặc TikZ tại challenge cần minh họa} & \placeholder{Cần kiểm tra} \\
+Phân tích phần song song hóa & Mỗi section challenge, tiểu mục ``Phân tích song song hóa'' & Đáp ứng \\
+Phương pháp chia việc & Mỗi section challenge, tiểu mục phân tích và thuật toán & Đáp ứng \\
+Phân phối và truy cập dữ liệu & Mỗi section challenge, tiểu mục ``Dữ liệu, phụ thuộc và chi phí'' & Đáp ứng \\
+Phân tích phụ thuộc dữ liệu, cân bằng tải, chi phí giao tiếp & Mỗi section challenge & Đáp ứng \\
+Thuật toán song song chi tiết & Pseudocode trong từng challenge & Đáp ứng \\
+Sơ đồ/lưu đồ nếu cần & Lưu đồ TikZ trong từng section challenge & Đáp ứng \\
 Đo thời gian chương trình song song & Bảng hiệu năng từng challenge & \placeholder{Cần điền} \\
 So sánh với chương trình tuần tự & Bảng hiệu năng từng challenge & \placeholder{Cần điền} \\
 Giải thích kết quả & Đoạn ``Nhận xét'' từng challenge & \placeholder{Cần điền} \\
 Mã nhóm, key, thành viên & Trang bìa & \placeholder{Cần điền} \\
 \bottomrule
 \end{longtable}
+\normalsize

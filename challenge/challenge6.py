@@ -4,12 +4,13 @@ from library4students import *
 
 _G_TOKENS = None
 _G_RANGES = None
+_G_SORTED_PTS = None
 
 _OFFSET = 2000000000
 _MASK = (1 << 32) - 1
 _SHIFT = 1 << 32
 
-_PREFIX = 256
+_PREFIX = 128
 
 _NEIGH_DELTA = (
     -_SHIFT - 1, -_SHIFT, -_SHIFT + 1,
@@ -18,19 +19,24 @@ _NEIGH_DELTA = (
 )
 
 
-def _closest_pair_core(pts_set):
-    n = len(pts_set)
+def _round_best_sq(best_sq):
+    if best_sq <= 1:
+        return float(best_sq)
+    return round(math.sqrt(best_sq), 4)
+
+
+def _closest_pair_sq_core(pts_source):
+    n = len(pts_source)
 
     if n < 2:
-        return 0.0
-
-    pts = list(pts_set)
+        return 0
 
     MASK = _MASK
     NEIGH_DELTA = _NEIGH_DELTA
     int_type = int
     isqrt = math.isqrt
-    sqrt = math.sqrt
+
+    pts = list(pts_source)
 
     prefix_len = _PREFIX if n >= _PREFIX else n
 
@@ -55,11 +61,11 @@ def _closest_pair_core(pts_set):
 
             if ds < best_sq:
                 if ds <= 1:
-                    return float(ds)
+                    return ds
                 best_sq = ds
 
     if n <= prefix_len:
-        return round(sqrt(best_sq), 4)
+        return best_sq
 
     d = isqrt(best_sq)
     if d == 0:
@@ -104,7 +110,7 @@ def _closest_pair_core(pts_set):
 
                     if ds < best_sq:
                         if ds <= 1:
-                            return 1.0
+                            return ds
                         best_sq = ds
                         updated = True
                 else:
@@ -115,7 +121,7 @@ def _closest_pair_core(pts_set):
 
                         if ds < best_sq:
                             if ds <= 1:
-                                return 1.0
+                                return ds
                             best_sq = ds
                             updated = True
 
@@ -152,7 +158,147 @@ def _closest_pair_core(pts_set):
         else:
             old.append(p)
 
-    return round(sqrt(best_sq), 4)
+    return best_sq
+
+
+def _closest_pair_core(pts_set):
+    return _round_best_sq(_closest_pair_sq_core(pts_set))
+
+
+def _looks_axis_structured(pts_set):
+    sample_limit = 2048
+
+    xs = set()
+    ys = set()
+    count = 0
+
+    for p in pts_set:
+        xs.add(p >> 32)
+        ys.add(p & _MASK)
+        count += 1
+        if count >= sample_limit:
+            break
+
+    if count < 512:
+        return False
+
+    duplicate_x = count - len(xs)
+    duplicate_y = count - len(ys)
+    return duplicate_x >= count // 8 or duplicate_y >= count // 8
+
+
+def _closest_pair_range_worker(rng):
+    global _G_SORTED_PTS
+
+    lo, hi = rng
+    if hi - lo < 2:
+        return 10 ** 40
+    return _closest_pair_sq_core(_G_SORTED_PTS[lo:hi])
+
+
+def _strip_best_sq(strip, best_sq):
+    MASK = _MASK
+
+    strip.sort(key=lambda p: p & MASK)
+
+    m = len(strip)
+    for i in range(m - 1):
+        p = strip[i]
+        px = p >> 32
+        py = p & MASK
+
+        j = i + 1
+        while j < m:
+            q = strip[j]
+            dy = (q & MASK) - py
+            dy_sq = dy * dy
+            if dy_sq >= best_sq:
+                break
+
+            dx = px - (q >> 32)
+            ds = dx * dx + dy_sq
+            if ds < best_sq:
+                if ds <= 1:
+                    return ds
+                best_sq = ds
+
+            j += 1
+
+    return best_sq
+
+
+def _closest_pair_parallel_x(pts_set, workers):
+    global _G_SORTED_PTS
+
+    n = len(pts_set)
+    if n < 2:
+        return 0.0
+    if workers <= 1 or n < 120000:
+        return _closest_pair_core(pts_set)
+
+    workers = min(workers, 4, n // 30000)
+    if workers <= 1:
+        return _closest_pair_core(pts_set)
+
+    pts = sorted(pts_set)
+    step = (n + workers - 1) // workers
+    ranges = []
+
+    start = 0
+    while start < n:
+        end = start + step
+        if end > n:
+            end = n
+        ranges.append((start, end))
+        start = end
+
+    try:
+        ctx = multiprocessing.get_context("fork")
+    except ValueError:
+        return _closest_pair_core(pts_set)
+
+    _G_SORTED_PTS = pts
+    try:
+        with ctx.Pool(processes=len(ranges)) as pool:
+            best_sq = min(pool.map(_closest_pair_range_worker, ranges))
+    finally:
+        _G_SORTED_PTS = None
+
+    if best_sq <= 1:
+        return float(best_sq)
+
+    strip_limit = 200000
+    for _, end in ranges[:-1]:
+        split_x = pts[end] >> 32
+        strip = []
+        append = strip.append
+
+        i = end - 1
+        while i >= 0:
+            p = pts[i]
+            dx = split_x - (p >> 32)
+            if dx * dx >= best_sq:
+                break
+            append(p)
+            i -= 1
+
+        i = end
+        while i < n:
+            p = pts[i]
+            dx = (p >> 32) - split_x
+            if dx * dx >= best_sq:
+                break
+            append(p)
+            i += 1
+
+        if len(strip) > strip_limit:
+            return _closest_pair_core(pts_set)
+
+        best_sq = _strip_best_sq(strip, best_sq)
+        if best_sq <= 1:
+            return 1.0
+
+    return _round_best_sq(best_sq)
 
 
 def _choose_parallel_plan(Q, total_n, ranges, cpu):
@@ -188,7 +334,7 @@ def _choose_parallel_plan(Q, total_n, ranges, cpu):
     return workers, chunksize
 
 
-def _solve_one_raw(case_idx):
+def _solve_one_raw(case_idx, use_inner_parallel=False):
     global _G_TOKENS, _G_RANGES
 
     toks = _G_TOKENS
@@ -204,6 +350,9 @@ def _solve_one_raw(case_idx):
 
     if len(pts_set) < N:
         return case_idx, 0.0
+
+    if use_inner_parallel and _looks_axis_structured(pts_set):
+        return case_idx, _closest_pair_parallel_x(pts_set, multiprocessing.cpu_count())
 
     return case_idx, _closest_pair_core(pts_set)
 
@@ -240,7 +389,7 @@ def MAIN(input_file_path):
     _G_RANGES = ranges
 
     if Q == 1:
-        return [_solve_one_raw(0)[1]]
+        return [_solve_one_raw(0, True)[1]]
 
     cpu = multiprocessing.cpu_count()
     workers, chunksize = _choose_parallel_plan(Q, total_n, ranges, cpu)
