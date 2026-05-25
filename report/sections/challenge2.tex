@@ -1,0 +1,52 @@
+\section{Challenge 2: Số Fibonacci modulo}
+\label{sec:challenge2}
+
+\begin{requirementbox}{Yêu cầu bài toán}
+Với $N$ truy vấn $A_i$ và modulo cố định $Q$, trả về danh sách $F(A_i) \bmod Q$ theo đúng thứ tự input. Ràng buộc lớn nhất là $N \le 10^6$, $Q \le 10^9$, $A_i \le 2 \times 10^8$.
+\end{requirementbox}
+
+\subsection{Cách hiện thực trong mã nguồn}
+File \codepath{challenge/challenge2.py} dùng hai chiến lược:
+\begin{itemize}
+  \item \func{\_fib\_pair}: fast doubling, tính $F(n)$ trong \bigO{\log n}.
+  \item \func{\_build\_tables}: dựng bảng window để tách $n$ thành phần thấp/cao, từ đó tính nhanh $F(n)$ modulo $Q$ bằng công thức cộng Fibonacci.
+\end{itemize}
+Kết quả được ghi vào \func{multiprocessing.RawArray} để bảo toàn thứ tự output và giảm chi phí gom danh sách. Khi số truy vấn đủ lớn, chương trình chia input theo byte-range, mỗi worker xử lý một đoạn truy vấn và ghi vào vùng kết quả tương ứng.
+
+\subsection{Phân tích song song hóa}
+Mỗi truy vấn Fibonacci độc lập với các truy vấn khác, nên có thể song song hóa theo tập truy vấn. Điểm cần chú ý là thứ tự output: worker xử lý chunk nào phải ghi kết quả vào đúng offset \func{out\_start}. Bảng window là dữ liệu đọc chung sau khi dựng, phù hợp để chia sẻ qua cơ chế fork trên Linux.
+
+\subsection{Thiết kế thuật toán song song}
+\begin{lstlisting}[caption={Pseudocode song song cho Challenge 2}]
+MAIN(path):
+    raw = read_all_bytes(path)
+    N, modulo, query_start = parse_header(raw)
+    if modulo == 1:
+        return [0] * N
+
+    build_window_tables_if_beneficial()
+    output = RawArray(unsigned_int_or_long_long, N)
+    chunks = split_queries_by_byte_range(raw, query_start, workers)
+
+    for each chunk in parallel:
+        tokens = raw[chunk.byte_start:chunk.byte_end].split()
+        for local_index, token in enumerate(tokens):
+            n = int(token)
+            output[chunk.out_start + local_index] = fib_mod(n, modulo)
+
+    return output[:]
+\end{lstlisting}
+
+\subsection{Dữ liệu, phụ thuộc và chi phí}
+\begin{itemize}
+  \item \textbf{Phân phối dữ liệu}: input byte và bảng Fibonacci là dữ liệu đọc chung; output là \func{RawArray} ghi theo vùng không giao nhau.
+  \item \textbf{Phụ thuộc dữ liệu}: không có phụ thuộc giữa các truy vấn; phụ thuộc duy nhất là bảng window phải dựng xong trước khi worker chạy.
+  \item \textbf{Cân bằng tải}: chia theo byte và số dòng; nếu các truy vấn có số chữ số tương tự nhau thì tải tương đối đều.
+  \item \textbf{Chi phí giao tiếp}: thấp vì worker không trả về danh sách lớn; chi phí nằm ở dựng bảng, parse token và đồng bộ process.
+\end{itemize}
+
+\subsection{Đánh giá hiệu năng}
+\benchmarktable{Challenge 2}
+
+\paragraph{Nhận xét.}
+\placeholder{Phân tích lợi ích của bảng window so với fast doubling thuần. Nêu trường hợp modulo/size nhỏ khiến overhead dựng bảng và tạo process lớn hơn lợi ích.}

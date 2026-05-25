@@ -1,0 +1,51 @@
+\section{Challenge 1: Tính tổng mảng số nguyên}
+\label{sec:challenge1}
+
+\begin{requirementbox}{Yêu cầu bài toán}
+Đọc $N$ số thực và chỉ cộng các giá trị đồng thời thỏa ba điều kiện: là số nguyên về mặt toán học, lớn hơn 0, và chia hết cho 3. Kết quả trả về là một số nguyên có thể vượt 32-bit.
+\end{requirementbox}
+
+\subsection{Cách hiện thực trong mã nguồn}
+File \codepath{challenge/challenge1.py} đọc toàn bộ input ở dạng byte vào biến toàn cục \func{\_global\_data}. Sau khi bỏ dòng đầu chứa $N$, chương trình chia vùng dữ liệu còn lại thành nhiều đoạn byte. Mỗi worker gọi \func{\_process\_indices(start, end)} để split token trong đoạn của mình, ép kiểu \func{float}, kiểm tra \func{val.is\_integer()}, điều kiện dương và chia hết cho 3, rồi trả về tổng cục bộ. Tiến trình chính cộng các tổng cục bộ bằng \func{sum(parts)}.
+
+\subsection{Phân tích song song hóa}
+Phép kiểm tra từng phần tử độc lập với mọi phần tử khác, vì vậy bài toán phù hợp với mô hình map-reduce:
+\begin{itemize}
+  \item \textbf{Map}: mỗi worker xử lý một đoạn token và tính tổng cục bộ.
+  \item \textbf{Reduce}: tiến trình chính cộng các tổng cục bộ.
+\end{itemize}
+Dữ liệu được chia theo byte-range thay vì theo số lượng token để tránh phải parse trước toàn bộ mảng. Để không cắt giữa một token, điểm cuối mỗi chunk được dịch tới khoảng trắng tiếp theo. Cách chia này giảm chi phí tiền xử lý nhưng có thể gây lệch tải nhẹ nếu các token có độ dài rất khác nhau.
+
+\subsection{Thiết kế thuật toán song song}
+\begin{lstlisting}[caption={Pseudocode song song cho Challenge 1}]
+MAIN(path):
+    raw = read_all_bytes(path)
+    data_start = position_after_first_line(raw)
+    workers = choose_worker_count(len(raw) - data_start)
+    ranges = split_byte_ranges_at_token_boundary(raw, data_start, workers)
+
+    partial_sums = pool.starmap(process_range, ranges)
+    return sum(partial_sums)
+
+process_range(start, end):
+    total = 0
+    for token in raw[start:end].split():
+        value = float(token)
+        if value > 0 and value.is_integer() and int(value) % 3 == 0:
+            total += int(value)
+    return total
+\end{lstlisting}
+
+\subsection{Dữ liệu, phụ thuộc và chi phí}
+\begin{itemize}
+  \item \textbf{Phân phối dữ liệu}: input được giữ trong biến toàn cục; worker chỉ nhận cặp chỉ số \func{(start, end)}.
+  \item \textbf{Phụ thuộc dữ liệu}: không có phụ thuộc giữa các phần tử; chỉ có bước reduce cuối.
+  \item \textbf{Cân bằng tải}: gần cân bằng theo số byte; có thể kém cân bằng nếu token dài/ngắn không đều.
+  \item \textbf{Chi phí giao tiếp}: thấp vì worker trả về một số nguyên cục bộ; chi phí chính là tạo process, split token và parse float.
+\end{itemize}
+
+\subsection{Đánh giá hiệu năng}
+\benchmarktable{Challenge 1}
+
+\paragraph{Nhận xét.}
+\placeholder{So sánh thời gian tuần tự và song song. Giải thích khi input nhỏ có thể chậm hơn do overhead tạo process; input lớn thường có lợi vì parse và kiểm tra token độc lập.}

@@ -1,0 +1,69 @@
+\section{Challenge 3: Nhân hai ma trận}
+\label{sec:challenge3}
+
+\begin{requirementbox}{Yêu cầu bài toán}
+Cho hai ma trận vuông $A$ và $B$ kích thước $N \times N$, tính $C = A \times B$, đồng thời trả về đường chéo chính, đường chéo phụ và tổng toàn bộ phần tử của $C$.
+\end{requirementbox}
+
+\subsection{Cách hiện thực trong mã nguồn}
+File \codepath{challenge/challenge3.py} đọc số nguyên bằng generator \func{\_int\_stream} để giảm chi phí split toàn bộ chuỗi. Ma trận $B$ được lưu ở dạng chuyển vị \func{\_BT\_DATA}; nhờ đó tích vô hướng giữa một dòng của $A$ và một cột của $B$ trở thành truy cập tuần tự giữa hai list. Hàm \func{\_mul\_chunk(start\_row, end\_row)} tính các dòng $C[start\_row:end\_row]$, đồng thời trả về đoạn đường chéo chính, đường chéo phụ và tổng cục bộ.
+
+\subsection{Phân tích song song hóa}
+Mỗi dòng của ma trận kết quả $C$ có thể tính độc lập sau khi đã có $A$ và $B^T$. Vì vậy chiến lược chia việc tự nhiên là chia theo cụm dòng:
+\begin{itemize}
+  \item Worker nhận một khoảng dòng $[s, e)$.
+  \item Worker đọc toàn bộ $A$ và $B^T$ nhưng chỉ ghi/trả về các dòng $C$ thuộc khoảng của mình.
+  \item Tiến trình chính ghép các dòng theo \func{start\_row}, ghép đường chéo và cộng tổng cục bộ.
+\end{itemize}
+
+\subsection{Thiết kế thuật toán song song}
+\begin{lstlisting}[caption={Pseudocode song song cho Challenge 3}]
+MAIN(path):
+    N = read_N(path)
+    A = read_matrix_A(path, N)
+    BT = read_transposed_matrix_B(path, N)
+    tasks = split_rows_into_chunks(N, workers, chunks_per_worker=4)
+
+    for each (start_row, end_row) in parallel:
+        rows = []
+        diag_main_part = []
+        diag_secondary_part = []
+        local_sum = 0
+
+        for i in range(start_row, end_row):
+            for j in range(N):
+                C[i][j] = dot(A[i], BT[j])
+            update diagonals and local_sum
+
+    merge rows, diagonals, and sums
+    return {matrix, diag_main, diag_secondary, total_sum}
+\end{lstlisting}
+
+\subsection{Dữ liệu, phụ thuộc và chi phí}
+\begin{itemize}
+  \item \textbf{Phân phối dữ liệu}: $A$ và $B^T$ là dữ liệu đọc chung qua biến toàn cục trong worker; kết quả được trả về theo chunk.
+  \item \textbf{Phụ thuộc dữ liệu}: các dòng $C_i$ độc lập; không có worker nào cần kết quả của worker khác.
+  \item \textbf{Cân bằng tải}: chia theo dòng cho tải gần đều vì mỗi dòng cần $N^2$ phép nhân-cộng.
+  \item \textbf{Chi phí giao tiếp}: cao hơn các challenge khác vì worker trả về nhiều dòng của ma trận $C$; với $N$ lớn, chi phí bộ nhớ và pickle/IPC có thể chi phối.
+  \item \textbf{Giới hạn bộ nhớ}: việc trả về toàn bộ $C$ có độ phức tạp bộ nhớ \bigO{N^2}; khi thử $N=5000$ cần ghi rõ cấu hình RAM và khả năng chạy thực tế.
+\end{itemize}
+
+\subsection{Đánh giá hiệu năng}
+\begin{table}[H]
+\centering
+\caption{Kết quả đo hiệu năng cho Challenge 3}
+\begin{tabular}{@{}rrrrrr@{}}
+\toprule
+$N$ & Số worker & $T_{\mathrm{seq}}$ (s) & $T_{\mathrm{par}}$ (s) & Speedup & Efficiency \\
+\midrule
+128 & \placeholder{p} & \placeholder{tseq} & \placeholder{tpar} & \placeholder{speedup} & \placeholder{eff} \\
+256 & \placeholder{p} & \placeholder{tseq} & \placeholder{tpar} & \placeholder{speedup} & \placeholder{eff} \\
+512 & \placeholder{p} & \placeholder{tseq} & \placeholder{tpar} & \placeholder{speedup} & \placeholder{eff} \\
+1024 & \placeholder{p} & \placeholder{tseq} & \placeholder{tpar} & \placeholder{speedup} & \placeholder{eff} \\
+5000 & \placeholder{p} & \placeholder{tseq} & \placeholder{tpar} & \placeholder{speedup} & \placeholder{eff} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Nhận xét.}
+\placeholder{Giải thích xu hướng khi N tăng: lượng tính toán tăng nhanh nên song song hóa theo dòng có lợi hơn, nhưng chi phí bộ nhớ và trả ma trận kết quả có thể giới hạn speedup.}

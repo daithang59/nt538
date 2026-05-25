@@ -1,0 +1,45 @@
+\section{Challenge 5: Tìm kiếm trong mảng số nguyên lớn}
+\label{sec:challenge5}
+
+\begin{requirementbox}{Yêu cầu bài toán}
+Input gồm khóa $K$ và một mảng số nguyên lớn tối đa $10^6$ phần tử. Cần tìm chỉ số nhỏ nhất $i$ sao cho $A[i] = K$, nếu không có thì trả về $-1$. Không dùng hàm tìm kiếm dựng sẵn; cần chia mảng thành nhiều đoạn và phối hợp worker.
+\end{requirementbox}
+
+\subsection{Hiện trạng mã nguồn}
+File \codepath{challenge/challenge5.py} hiện đang rỗng tại thời điểm lập báo cáo. Vì vậy section này được viết theo thiết kế đề xuất từ yêu cầu bài toán. Sau khi nhóm bổ sung phiên bản cuối của Challenge 5, cần cập nhật lại phần ``Cách hiện thực trong mã nguồn'' để khớp chính xác với code.
+
+\subsection{Thiết kế đề xuất}
+Chiến lược song song hóa phù hợp là chia mảng $A$ thành các đoạn liên tiếp. Mỗi worker tìm vị trí đầu tiên của $K$ trong đoạn của mình và trả về chỉ số toàn cục nhỏ nhất trong đoạn, hoặc $-1$ nếu không tìm thấy. Tiến trình chính lấy \func{min} trên các kết quả khác $-1$.
+
+\subsection{Thiết kế thuật toán song song}
+\begin{lstlisting}[caption={Pseudocode đề xuất cho Challenge 5}]
+MAIN(path):
+    K, A = parse_input(path)
+    ranges = split_index_ranges(len(A), workers)
+
+    candidates = pool.map(search_range, ranges)
+    valid = [idx for idx in candidates if idx != -1]
+    if valid is empty:
+        return -1
+    return min(valid)
+
+search_range(start, end):
+    for i in range(start, end):
+        if A[i] == K:
+            return i
+    return -1
+\end{lstlisting}
+
+\subsection{Dữ liệu, phụ thuộc và chi phí}
+\begin{itemize}
+  \item \textbf{Phân phối dữ liệu}: mảng $A$ có thể đặt trong biến toàn cục để worker chỉ nhận khoảng chỉ số.
+  \item \textbf{Phụ thuộc dữ liệu}: mỗi đoạn tìm kiếm độc lập; bước reduce chỉ chọn chỉ số nhỏ nhất.
+  \item \textbf{Cân bằng tải}: nếu không có cơ chế dừng sớm, mỗi worker quét gần như số phần tử bằng nhau. Nếu có dừng sớm, cần đồng bộ cẩn thận để vẫn đảm bảo chỉ số nhỏ nhất.
+  \item \textbf{Chi phí giao tiếp}: thấp vì mỗi worker chỉ trả về một chỉ số.
+\end{itemize}
+
+\subsection{Đánh giá hiệu năng}
+\benchmarktable{Challenge 5}
+
+\paragraph{Nhận xét.}
+\placeholder{Sau khi có code cuối, điền số liệu cho các trường hợp K xuất hiện đầu mảng, giữa mảng, cuối mảng và không xuất hiện. So sánh ảnh hưởng của dừng sớm nếu có.}

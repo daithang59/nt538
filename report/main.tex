@@ -1,0 +1,146 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[a4paper,top=2.5cm,bottom=2.5cm,left=3cm,right=2cm]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setdefaultlanguage{vietnamese}
+\IfFontExistsTF{Times New Roman}{\setmainfont{Times New Roman}}{\setmainfont{TeX Gyre Termes}}
+\IfFontExistsTF{Arial}{\setsansfont{Arial}}{\setsansfont{TeX Gyre Heros}}
+\IfFontExistsTF{Consolas}{\setmonofont{Consolas}}{\setmonofont{DejaVu Sans Mono}}
+
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{graphicx}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+\tikzset{
+  flowstart/.style={ellipse, draw=NavyBlue, fill=blue!6, thick, align=center, minimum width=2.8cm, minimum height=0.8cm},
+  flowprocess/.style={rectangle, rounded corners=2pt, draw=NavyBlue, fill=blue!3, thick, align=center, text width=4.1cm, minimum height=0.9cm},
+  flowdecision/.style={diamond, aspect=2, draw=Orange, fill=orange!8, thick, align=center, text width=3.1cm, inner sep=1pt},
+  flowmerge/.style={rectangle, rounded corners=2pt, draw=ForestGreen, fill=green!5, thick, align=center, text width=4.1cm, minimum height=0.9cm},
+  flowarrow/.style={-{Latex[length=2.5mm]}, thick}
+}
+\usepackage{listings}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{enumitem}
+\usepackage{float}
+\usepackage[hidelinks]{hyperref}
+\usepackage{url}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+
+% ====== Metadata cần nhóm điền trước khi nộp ======
+\newcommand{\ReportUniversity}{Trường Đại học Công nghệ Thông tin -- ĐHQG-HCM}
+\newcommand{\ReportFaculty}{Khoa Mạng máy tính \& Truyền thông}
+\newcommand{\ReportCourse}{Thực hành Giải thuật xử lý song song và phân bổ}
+\newcommand{\ReportTitle}{Báo cáo thực hành giải thuật xử lý song song và phân bổ}
+\newcommand{\ReportGroupCodeText}{MÃ NHÓM}
+\newcommand{\ReportKeyText}{KEY}
+\newcommand{\ReportGroupCode}{\textcolor{red}{\ReportGroupCodeText}}
+\newcommand{\ReportKey}{\textcolor{red}{\ReportKeyText}}
+\newcommand{\ReportInstructorA}{Lê Minh Khánh Hội}
+\newcommand{\ReportInstructorB}{Lê Phạm Hoàng Trung}
+\newcommand{\ReportDate}{\today}
+
+\newcommand{\MemberOne}{\textcolor{red}{Họ tên -- MSSV -- nhiệm vụ chính}}
+\newcommand{\MemberTwo}{\textcolor{red}{Họ tên -- MSSV -- nhiệm vụ chính}}
+\newcommand{\MemberThree}{\textcolor{red}{Họ tên -- MSSV -- nhiệm vụ chính}}
+\newcommand{\MemberFour}{\textcolor{red}{Họ tên -- MSSV -- nhiệm vụ chính}}
+
+\hypersetup{
+  pdftitle={Báo cáo thực hành giải thuật xử lý song song và phân bổ},
+  pdfauthor={\ReportGroupCodeText},
+  pdfsubject={Parallel Computing Lab Report},
+  pdfkeywords={parallel computing, multiprocessing, Python, UIT}
+}
+
+% ====== Helpers ======
+\newcommand{\placeholder}[1]{\textcolor{red}{\textbf{[CẦN ĐIỀN: #1]}}}
+\newcommand{\codepath}[1]{\path{#1}}
+\newcommand{\func}[1]{\texttt{#1}}
+\newcommand{\bigO}[1]{\ensuremath{\mathcal{O}(#1)}}
+\newcommand{\speedup}{\ensuremath{S_p = T_{\mathrm{seq}} / T_{\mathrm{par}}}}
+\newcommand{\efficiency}{\ensuremath{E_p = S_p / p}}
+
+\newenvironment{requirementbox}[1]{%
+  \par\medskip
+  \noindent\textcolor{NavyBlue}{\rule{\linewidth}{0.6pt}}\par
+  \noindent\textbf{#1}\par\smallskip
+  \noindent
+}{%
+  \par\noindent\textcolor{NavyBlue}{\rule{\linewidth}{0.6pt}}
+  \par\medskip
+}
+
+\newcommand{\benchmarktable}[1]{
+\begin{table}[H]
+\centering
+\caption{Kết quả đo hiệu năng cho #1}
+\begin{tabular}{@{}rrrrrr@{}}
+\toprule
+Kích thước & Số worker & $T_{\mathrm{seq}}$ (s) & $T_{\mathrm{par}}$ (s) & Speedup & Efficiency \\
+\midrule
+\placeholder{size} & \placeholder{p} & \placeholder{tseq} & \placeholder{tpar} & \placeholder{speedup} & \placeholder{eff} \\
+\placeholder{size} & \placeholder{p} & \placeholder{tseq} & \placeholder{tpar} & \placeholder{speedup} & \placeholder{eff} \\
+\placeholder{size} & \placeholder{p} & \placeholder{tseq} & \placeholder{tpar} & \placeholder{speedup} & \placeholder{eff} \\
+\bottomrule
+\end{tabular}
+\end{table}
+}
+
+\lstdefinestyle{pythonstyle}{
+  language=Python,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{NavyBlue}\bfseries,
+  stringstyle=\color{ForestGreen},
+  commentstyle=\color{gray},
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  stepnumber=1,
+  numbersep=8pt,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  rulecolor=\color{black!25},
+  tabsize=4
+}
+\lstset{style=pythonstyle}
+
+\pagestyle{fancy}
+\setlength{\headheight}{15.1pt}
+\fancyhf{}
+\lhead{\ReportGroupCode}
+\rhead{\ReportCourse}
+\cfoot{Trang \thepage/\pageref{LastPage}}
+
+\setlist[itemize]{topsep=4pt,itemsep=2pt}
+\setlist[enumerate]{topsep=4pt,itemsep=2pt}
+\renewcommand{\arraystretch}{1.2}
+
+\begin{document}
+
+\input{sections/00_frontmatter}
+
+\tableofcontents
+\newpage
+\listoftables
+\listoffigures
+\newpage
+
+\input{sections/01_overview}
+\input{sections/challenge1}
+\input{sections/challenge2}
+\input{sections/challenge3}
+\input{sections/challenge4}
+\input{sections/challenge5}
+\input{sections/challenge6}
+\input{sections/08_conclusion}
+\input{sections/09_appendix}
+
+\end{document}

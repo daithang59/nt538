@@ -1,0 +1,37 @@
+\section{Kết luận}
+\label{sec:conclusion}
+
+Qua sáu challenge, có thể thấy hiệu quả của xử lý song song phụ thuộc trực tiếp vào mức độ độc lập của các đơn vị công việc và chi phí phối hợp giữa các worker. Những bài toán có cấu trúc dữ liệu độc lập rõ ràng như lọc mảng, xử lý truy vấn Fibonacci hoặc tìm kiếm tuyến tính thường phù hợp với mô hình chia đoạn. Ngược lại, các bài toán có kết quả trung gian lớn như nhân ma trận hoặc sắp xếp cần cân nhắc kỹ chi phí truyền dữ liệu và bước gom kết quả.
+
+Về mặt thiết kế, nhóm đã ưu tiên các chiến lược chia việc đơn giản, dễ kiểm chứng và phù hợp với ràng buộc của hệ thống chấm. Các worker chủ yếu xử lý trên những vùng dữ liệu không giao nhau, nhờ đó giảm nhu cầu khóa đồng bộ. Đối với các bài toán cần bảo toàn thứ tự kết quả, chương trình sử dụng offset hoặc chỉ số test case để đặt kết quả về đúng vị trí ban đầu.
+
+\subsection{Tổng hợp kết quả}
+\begin{table}[H]
+\centering
+\caption{Tổng hợp speedup tốt nhất sau khi đo}
+\begin{tabularx}{\linewidth}{@{}c l c c X@{}}
+\toprule
+Challenge & Chiến lược chính & Kích thước tốt nhất & Speedup tốt nhất & Nhận xét ngắn \\
+\midrule
+1 & Chia byte-range, reduce tổng & \placeholder{size} & \placeholder{speedup} & \placeholder{nhận xét} \\
+2 & Chia truy vấn, ghi vào \func{RawArray} & \placeholder{size} & \placeholder{speedup} & \placeholder{nhận xét} \\
+3 & Chia theo cụm dòng ma trận & \placeholder{size} & \placeholder{speedup} & \placeholder{nhận xét} \\
+4 & Sort chunk song song, merge kết quả & \placeholder{size} & \placeholder{speedup} & \placeholder{nhận xét} \\
+5 & Chia đoạn tìm kiếm & \placeholder{size} & \placeholder{speedup} & \placeholder{nhận xét} \\
+6 & Chia theo bộ dữ liệu điểm & \placeholder{size} & \placeholder{speedup} & \placeholder{nhận xét} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Nhận định chung}
+Speedup kỳ vọng không tăng tuyến tính theo số worker trong mọi trường hợp. Với dữ liệu nhỏ, chi phí tạo tiến trình và truyền dữ liệu có thể lớn hơn lợi ích song song hóa. Với dữ liệu lớn, hiệu quả cải thiện rõ hơn, nhưng vẫn bị giới hạn bởi băng thông bộ nhớ, chi phí pickle/IPC, bước reduce và mức cân bằng tải giữa các worker. Do đó, việc chọn ngưỡng chuyển từ tuần tự sang song song là một phần quan trọng trong thiết kế.
+
+\subsection{Checklist trước khi nộp}
+\begin{itemize}
+  \item Điền mã nhóm, key và thông tin thành viên ở \codepath{main.tex}.
+  \item Cập nhật nội dung Challenge 5 nếu nhóm bổ sung mã nguồn cuối cùng cho challenge này.
+  \item Đo và điền đầy đủ bảng thời gian tuần tự/song song cho từng challenge.
+  \item Giải thích các trường hợp speedup thấp hoặc chương trình song song chậm hơn chương trình tuần tự.
+  \item Build báo cáo thành PDF bằng XeLaTeX và kiểm tra lại mục lục, bảng, hình, số trang.
+  \item Bảo đảm phiên bản tuần tự chỉ dùng để benchmark trong báo cáo, không nộp lên hệ thống chấm.
+\end{itemize}

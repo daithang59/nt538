@@ -1,0 +1,69 @@
+\section{Tổng quan yêu cầu và phương pháp đánh giá}
+\label{sec:overview}
+
+\subsection{Mục tiêu báo cáo}
+Bài thực hành yêu cầu xây dựng các thuật toán xử lý song song cho sáu bài toán có kích thước dữ liệu lớn. Trọng tâm của báo cáo không chỉ là mô tả kết quả hiện thực, mà còn làm rõ cơ sở thiết kế: phần việc nào có thể thực thi đồng thời, dữ liệu được phân chia như thế nào, các tiến trình phối hợp ra sao và những yếu tố nào ảnh hưởng đến hiệu năng.
+
+Các chương trình được hiện thực bằng Python theo giao diện chung \func{MAIN(input\_file\_path)}. Mỗi hàm đọc dữ liệu từ tệp đầu vào, xử lý theo yêu cầu của từng challenge và trả về kết quả đúng định dạng để hệ thống chấm có thể kiểm tra tự động.
+
+\subsection{Phạm vi nội dung}
+Theo yêu cầu của đề bài, mỗi challenge trong báo cáo được trình bày theo cùng một cấu trúc:
+\begin{itemize}
+  \item \textbf{Mô tả bài toán}: tóm tắt dữ liệu vào, dữ liệu ra và điều kiện cần thỏa mãn.
+  \item \textbf{Phân tích song song hóa}: xác định các đơn vị công việc độc lập, phương án chia việc, cách phân phối và truy cập dữ liệu.
+  \item \textbf{Thiết kế thuật toán}: trình bày luồng xử lý bằng mô tả, pseudocode và lưu đồ minh họa.
+  \item \textbf{Đánh giá hiệu năng}: so sánh thời gian thực thi giữa phiên bản tuần tự tham chiếu và phiên bản song song, từ đó phân tích speedup và efficiency.
+\end{itemize}
+
+\subsection{Môi trường thực nghiệm}
+Các số liệu trong báo cáo cần được đo trên cùng một môi trường để bảo đảm tính nhất quán. Bảng~\ref{tab:environment} là nơi ghi lại cấu hình thực nghiệm đã sử dụng.
+
+\begin{table}[H]
+\centering
+\caption{Thông tin môi trường đo hiệu năng}
+\label{tab:environment}
+\begin{tabularx}{\linewidth}{@{}lX@{}}
+\toprule
+Hạng mục & Giá trị \\
+\midrule
+CPU & \placeholder{Tên CPU, số core/số thread} \\
+RAM & \placeholder{Dung lượng RAM} \\
+Hệ điều hành & \placeholder{OS và phiên bản} \\
+Python & \placeholder{Phiên bản Python trên máy đo hoặc server} \\
+Số worker mặc định & \placeholder{Giá trị multiprocessing.cpu\_count() hoặc cấu hình cố định} \\
+Lệnh/công cụ đo thời gian & \placeholder{time.perf\_counter hoặc công cụ đo tương đương} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Phương pháp đo hiệu năng}
+Đối với mỗi kích thước dữ liệu, chương trình được chạy nhiều lần trên cùng một cấu hình. Thời gian thực thi trung bình được tính theo công thức:
+\[
+T = \frac{1}{k}\sum_{i=1}^{k} T_i,
+\]
+trong đó $k$ là số lần lặp. Khi cần tránh nhiễu do khởi tạo cache hoặc nạp module, lần chạy đầu tiên có thể được dùng làm warm-up và không đưa vào kết quả trung bình.
+
+Hai chỉ số chính được dùng để đánh giá là:
+\[
+\speedup,\qquad \efficiency.
+\]
+Trong đó $T_{\mathrm{seq}}$ là thời gian của phiên bản tuần tự tham chiếu, $T_{\mathrm{par}}$ là thời gian của phiên bản song song và $p$ là số worker được sử dụng. Speedup phản ánh mức cải thiện thời gian, còn efficiency cho biết mức độ tận dụng tài nguyên xử lý.
+
+\subsection{Tóm tắt mã nguồn hiện có}
+\begin{table}[H]
+\centering
+\caption{Tóm tắt hiện trạng mã nguồn theo từng challenge}
+\label{tab:source-summary}
+\begin{tabularx}{\linewidth}{@{}c l X@{}}
+\toprule
+Challenge & File & Đặc điểm hiện thực chính \\
+\midrule
+1 & \codepath{challenge/challenge1.py} & Chia dữ liệu đầu vào theo byte-range, mỗi worker lọc và cộng các giá trị hợp lệ, tiến trình chính gom tổng cục bộ. \\
+2 & \codepath{challenge/challenge2.py} & Xử lý độc lập từng truy vấn Fibonacci modulo; kết hợp fast doubling, bảng window và mảng chia sẻ \func{RawArray}. \\
+3 & \codepath{challenge/challenge3.py} & Chia phép nhân ma trận theo cụm dòng; sử dụng ma trận $B$ đã chuyển vị để tăng tính liên tục khi truy cập dữ liệu. \\
+4 & \codepath{challenge/challenge4.py} & Tự hiện thực merge sort; sắp xếp song song các chunk ban đầu rồi merge kết quả theo thứ tự. \\
+5 & \codepath{challenge/challenge5.py} & File hiện tại chưa có nội dung; phần báo cáo tương ứng được viết theo thiết kế đề xuất từ yêu cầu bài toán. \\
+6 & \codepath{challenge/challenge6.py} & Xử lý độc lập từng bộ điểm 2D; dùng mã hóa điểm và hash grid để tìm khoảng cách gần nhất. \\
+\bottomrule
+\end{tabularx}
+\end{table}

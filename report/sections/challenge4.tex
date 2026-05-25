@@ -1,0 +1,63 @@
+\section{Challenge 4: Sắp xếp mảng một chiều}
+\label{sec:challenge4}
+
+\begin{requirementbox}{Yêu cầu bài toán}
+Sắp xếp ổn định $N$ bản ghi $(v, label)$ theo $v$ giảm dần, nếu trùng $v$ thì \func{label} tăng dần từ điển, nếu cả hai trùng thì giữ thứ tự ban đầu. Không dùng hàm sắp xếp dựng sẵn của Python.
+\end{requirementbox}
+
+\subsection{Cách hiện thực trong mã nguồn}
+File \codepath{challenge/challenge4.py} biểu diễn mỗi bản ghi thành tuple \func{(-v, label)} để dùng thứ tự tăng dần của tuple thay cho yêu cầu $v$ giảm dần. Thuật toán sort cục bộ là bottom-up merge sort tự cài trong \func{bottom\_up\_merge\_sort}. Với input lớn, \func{parallel\_sort} chia records thành nhiều đoạn, sort từng đoạn bằng \func{multiprocessing.Pool.map}, sau đó merge từng cặp đoạn bằng \func{merge\_two} cho tới khi còn một danh sách.
+
+\subsection{Phân tích song song hóa}
+Merge sort có hai mức có thể song song:
+\begin{itemize}
+  \item Sort các chunk ban đầu độc lập.
+  \item Merge các cặp chunk theo từng tầng.
+\end{itemize}
+Mã hiện tại song song hóa giai đoạn sort chunk, còn giai đoạn merge được thực hiện trong tiến trình chính. Đây là lựa chọn đơn giản, giảm chi phí trao đổi dữ liệu giữa process nhưng có thể khiến merge cuối trở thành bottleneck khi $N$ rất lớn.
+
+\subsection{Thiết kế thuật toán song song}
+\begin{lstlisting}[caption={Pseudocode song song cho Challenge 4}]
+MAIN(path):
+    records = read_records(path)
+    transformed = [(-value, label) for each record]
+    sorted_records = parallel_sort(transformed)
+    return [(-value, label.decode()) for each item in sorted_records]
+
+parallel_sort(records):
+    if len(records) < threshold:
+        return bottom_up_merge_sort(records)
+
+    ranges = split_array_ranges(records, workers)
+    chunks = pool.map(sort_range, ranges)
+    return merge_chunks(chunks)
+\end{lstlisting}
+
+\subsection{Tính ổn định}
+Trong merge sort, khi hai phần tử bằng nhau, hàm merge chọn phần tử bên trái trước vì điều kiện \func{a <= b}. Điều này giữ thứ tự trong từng chunk. Khi merge các chunk theo thứ tự ban đầu, các phần tử bằng nhau ở chunk bên trái cũng được giữ trước chunk bên phải, nên tính ổn định được bảo toàn.
+
+\subsection{Dữ liệu, phụ thuộc và chi phí}
+\begin{itemize}
+  \item \textbf{Phân phối dữ liệu}: mảng records được chia thành các range; worker đọc slice tương ứng từ biến toàn cục.
+  \item \textbf{Phụ thuộc dữ liệu}: sort cục bộ độc lập; merge phụ thuộc vào kết quả sort của các chunk.
+  \item \textbf{Cân bằng tải}: chia theo số lượng record nên cân bằng tương đối đều.
+  \item \textbf{Chi phí giao tiếp}: đáng kể vì mỗi worker trả về một danh sách đã sort; merge tuần tự cũng tiêu tốn \bigO{N \log p}.
+\end{itemize}
+
+\subsection{Đánh giá hiệu năng}
+\begin{table}[H]
+\centering
+\caption{Kết quả đo hiệu năng cho Challenge 4}
+\begin{tabular}{@{}rrrrrr@{}}
+\toprule
+$N$ & Số worker & $T_{\mathrm{seq}}$ (s) & $T_{\mathrm{par}}$ (s) & Speedup & Efficiency \\
+\midrule
+$10^4$ & \placeholder{p} & \placeholder{tseq} & \placeholder{tpar} & \placeholder{speedup} & \placeholder{eff} \\
+$10^5$ & \placeholder{p} & \placeholder{tseq} & \placeholder{tpar} & \placeholder{speedup} & \placeholder{eff} \\
+$10^6$ & \placeholder{p} & \placeholder{tseq} & \placeholder{tpar} & \placeholder{speedup} & \placeholder{eff} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Nhận xét.}
+\placeholder{Nêu rõ ngưỡng N nhỏ có thể chạy tuần tự nhanh hơn do overhead; với N lớn, sort chunk song song có lợi nhưng merge tuần tự và chi phí truyền list làm speedup không tuyến tính.}

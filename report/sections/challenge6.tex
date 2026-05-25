@@ -1,0 +1,54 @@
+\section{Challenge 6: Phân tích không gian nhúng}
+\label{sec:challenge6}
+
+\begin{requirementbox}{Yêu cầu bài toán}
+Với $Q$ bộ dữ liệu điểm 2D, tìm khoảng cách Euclid nhỏ nhất giữa hai điểm bất kỳ trong từng bộ và trả về danh sách kết quả làm tròn 4 chữ số thập phân.
+\end{requirementbox}
+
+\subsection{Cách hiện thực trong mã nguồn}
+File \codepath{challenge/challenge6.py} đọc toàn bộ token số nguyên, xác định range của từng test case rồi lưu vào \func{\_G\_RANGES}. Với mỗi bộ dữ liệu, \func{\_solve\_one\_raw(case\_idx)} mã hóa điểm $(x,y)$ thành một số nguyên 64-bit sau khi cộng offset để xử lý tọa độ âm. Nếu phát hiện điểm trùng, kết quả là $0.0$. Nếu không, \func{\_closest\_pair\_core} dùng kỹ thuật hash grid: lấy một số điểm đầu làm mẫu để ước lượng khoảng cách tốt nhất ban đầu, sau đó đưa điểm vào lưới kích thước $d$ và chỉ so sánh với các ô lân cận.
+
+\subsection{Phân tích song song hóa}
+Các bộ dữ liệu độc lập với nhau, nên mã hiện tại song song hóa theo test case:
+\begin{itemize}
+  \item Với $Q=1$ hoặc tổng số điểm nhỏ, chạy tuần tự để tránh overhead process.
+  \item Với nhiều bộ dữ liệu lớn, sắp xếp thứ tự xử lý theo $N$ giảm dần để worker nhận case lớn trước, giảm nguy cơ worker cuối bị giữ bởi một case rất lớn.
+  \item Worker trả về cặp \func{(case\_idx, ans)} để tiến trình chính đặt kết quả về đúng thứ tự ban đầu.
+\end{itemize}
+
+\subsection{Thiết kế thuật toán song song}
+\begin{lstlisting}[caption={Pseudocode song song cho Challenge 6}]
+MAIN(path):
+    tokens = parse_all_ints(path)
+    ranges = locate_each_case(tokens)
+
+    if small_input:
+        return [solve_case(i) for i in range(Q)]
+
+    order = cases_sorted_by_size_descending()
+    answers = [0.0] * Q
+    for case_idx, ans in pool.imap_unordered(solve_case, order):
+        answers[case_idx] = ans
+    return answers
+
+solve_case(case_idx):
+    points = encode_points_as_int_set(case_idx)
+    if duplicate_exists:
+        return 0.0
+    return closest_pair_hash_grid(points)
+\end{lstlisting}
+
+\subsection{Dữ liệu, phụ thuộc và chi phí}
+\begin{itemize}
+  \item \textbf{Phân phối dữ liệu}: token input và range từng case là dữ liệu đọc chung; worker nhận chỉ số case.
+  \item \textbf{Phụ thuộc dữ liệu}: không có phụ thuộc giữa các case; trong một case, hash grid là cấu trúc cục bộ của worker.
+  \item \textbf{Cân bằng tải}: sắp xếp case lớn trước giúp cân bằng tốt hơn khi kích thước các case chênh lệch.
+  \item \textbf{Chi phí giao tiếp}: thấp vì worker chỉ trả về một số thực; chi phí chính nằm ở parse input, tạo set điểm và xử lý hash grid.
+  \item \textbf{Độ đúng}: cần nhấn mạnh cơ chế so sánh trong các ô lân cận và cập nhật lại kích thước lưới khi tìm được khoảng cách nhỏ hơn.
+\end{itemize}
+
+\subsection{Đánh giá hiệu năng}
+\benchmarktable{Challenge 6}
+
+\paragraph{Nhận xét.}
+\placeholder{Điền số liệu theo số case Q, tổng số điểm và phân bố kích thước case. Giải thích trường hợp Q nhỏ khó tận dụng song song theo case.}

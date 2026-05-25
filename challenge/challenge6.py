@@ -9,7 +9,7 @@ _OFFSET = 2000000000
 _MASK = (1 << 32) - 1
 _SHIFT = 1 << 32
 
-_PREFIX = 128
+_PREFIX = 256
 
 _NEIGH_DELTA = (
     -_SHIFT - 1, -_SHIFT, -_SHIFT + 1,
@@ -28,6 +28,7 @@ def _closest_pair_core(pts_set):
 
     MASK = _MASK
     NEIGH_DELTA = _NEIGH_DELTA
+    int_type = int
     isqrt = math.isqrt
     sqrt = math.sqrt
 
@@ -75,7 +76,7 @@ def _closest_pair_core(pts_set):
         old = gget(key)
         if old is None:
             grid[key] = p
-        elif type(old) is int:
+        elif type(old) is int_type:
             grid[key] = [old, p]
         else:
             old.append(p)
@@ -96,7 +97,7 @@ def _closest_pair_core(pts_set):
             b = gget(base_key + delta)
 
             if b is not None:
-                if type(b) is int:
+                if type(b) is int_type:
                     dx = px - (b >> 32)
                     dy = py - (b & MASK)
                     ds = dx * dx + dy * dy
@@ -137,28 +138,54 @@ def _closest_pair_core(pts_set):
                     old = gget(key)
                     if old is None:
                         grid[key] = q
-                    elif type(old) is int:
+                    elif type(old) is int_type:
                         grid[key] = [old, q]
                     else:
                         old.append(q)
-            else:
-                old = gget(base_key)
-                if old is None:
-                    grid[base_key] = p
-                elif type(old) is int:
-                    grid[base_key] = [old, p]
-                else:
-                    old.append(p)
+                continue
+
+        old = gget(base_key)
+        if old is None:
+            grid[base_key] = p
+        elif type(old) is int_type:
+            grid[base_key] = [old, p]
         else:
-            old = gget(base_key)
-            if old is None:
-                grid[base_key] = p
-            elif type(old) is int:
-                grid[base_key] = [old, p]
-            else:
-                old.append(p)
+            old.append(p)
 
     return round(sqrt(best_sq), 4)
+
+
+def _choose_parallel_plan(Q, total_n, ranges, cpu):
+    if Q <= 1 or cpu <= 1:
+        return 1, 1
+
+    workers = min(cpu, Q)
+    if workers <= 1:
+        return 1, 1
+
+    max_n = 0
+    for _, n in ranges:
+        if n > max_n:
+            max_n = n
+
+    if max_n < 128:
+        return 1, 1
+
+    if Q == 2 and total_n < 80000:
+        return 1, 1
+
+    if Q < 4 and total_n < 60000:
+        return 1, 1
+
+    if Q < 8 and total_n < 30000:
+        return 1, 1
+
+    chunksize = 1
+    avg_n = total_n // Q
+    if Q >= workers * 4 and avg_n <= 2000 and max_n <= avg_n * 2:
+        chunksize = 2
+
+    return workers, chunksize
 
 
 def _solve_one_raw(case_idx):
@@ -216,9 +243,9 @@ def MAIN(input_file_path):
         return [_solve_one_raw(0)[1]]
 
     cpu = multiprocessing.cpu_count()
-    workers = min(cpu, Q)
+    workers, chunksize = _choose_parallel_plan(Q, total_n, ranges, cpu)
 
-    if total_n < 100000 or workers <= 1:
+    if workers <= 1:
         return [_solve_one_raw(i)[1] for i in range(Q)]
 
     order = list(range(Q))
@@ -226,10 +253,13 @@ def MAIN(input_file_path):
 
     answers = [0.0] * Q
 
-    ctx = multiprocessing.get_context("fork")
+    try:
+        ctx = multiprocessing.get_context("fork")
+    except ValueError:
+        return [_solve_one_raw(i)[1] for i in range(Q)]
 
     with ctx.Pool(processes=workers) as pool:
-        for idx_result, ans in pool.imap_unordered(_solve_one_raw, order, chunksize=1):
+        for idx_result, ans in pool.imap_unordered(_solve_one_raw, order, chunksize=chunksize):
             answers[idx_result] = ans
 
     return answers
